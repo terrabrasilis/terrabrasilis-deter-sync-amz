@@ -68,7 +68,7 @@ docker container exec -it <container_id_or_name> sh
 
 ## Run on stack
 
-For run this service on Swarm use the client-api-stack.yaml.
+For run this service on Swarm use the [client-api-stack.yaml](https://github.com/Terrabrasilis/docker-stacks/blob/master/deter-sync/client-api-stack.yaml).
 
 Preconditions:
 - Create the directory into the file system of the docker manager node for persist the JSON and Shapefile files;
