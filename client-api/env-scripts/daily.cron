@@ -1,0 +1,2 @@
+# m h  dom mon dow   command
+10 07 * * * /bin/bash /usr/local/cron_exec.sh >> /logs/cron.log 2>&1
