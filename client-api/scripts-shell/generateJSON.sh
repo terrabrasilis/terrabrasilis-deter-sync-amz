@@ -16,7 +16,7 @@ fi;
 LOG=$LOG_DIR/$PROJECT_NAME.log
 
 # target dir for generated files
-TARGET_DIR=$NGINX_ROOT_DIR/$PROJECT_NAME
+TARGET_DIR=$SHARED_DIR/$PROJECT_NAME
 
 # create target dir if no exists
 if [ ! -d $TARGET_DIR ];
@@ -24,10 +24,11 @@ then
 	mkdir -p $TARGET_DIR
 fi;
 
-# Here, we read and test the arguments.
+# Here, we read and test the mandatory argument.
 LAYER_NAME=""
 if [ "$1" == "" ];
 then
+	echo $DATE" - The parameter LAYER_NAME is empty!!" >> $LOG
 	exit
 else
 	LAYER_NAME=$1
@@ -44,8 +45,8 @@ fi;
 # After that, we request the new data in JSON format and putting it in a new file.
 curl $AUTH $GEOSERVER_BASE_URL'/'$GEOSERVER_BASE_PATH'?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAME='$PROJECT_NAME'%3A'$LAYER_NAME'&OUTPUTFORMAT=application%2Fjson' \
 -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4' \
--H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36' \
--H 'Accept: */*' -H 'Referer: '$GEOSERVER_BASE_URL'/' -H 'X-Requested-With: XMLHttpRequest' \
+-H 'User-Agent: ShellScript(generateJSON 0.7)' \
+-H 'Accept: */*' -H 'Referer: '$GEOSERVER_BASE_URL'/' -H 'X-Requested-With: curl' \
 --compressed >> $TARGET_DIR/$LAYER_NAME-new.json
 
 # Finally, we test the result and remove the old file or, if the test has failed, we restore the old file as the current file.

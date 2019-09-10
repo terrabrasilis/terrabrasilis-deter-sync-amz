@@ -21,15 +21,17 @@ if [ "$succeeded" -eq "1" ];
 then
     
     export PROJECT_NAME=deter-amz
-    #/usr/local/scripts-shell/pull_json.sh deter_all_d
-    /usr/local/scripts-shell/pull_json.sh deter_public_d
-    /usr/local/scripts-shell/pull_json.sh deter_month_d
+    /usr/local/scripts-shell/generateJSON.sh daily_d
+    /usr/local/scripts-shell/generateJSON.sh month_d
+    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
+    /usr/local/scripts-shell/generateJSON.sh month_auth_d
     /usr/local/scripts-shell/generateSHP.sh
 
     export PROJECT_NAME=deter-cerrado
-    /usr/local/scripts-shell/pull_json.sh deter_cerrado_all_d
-    #/usr/local/scripts-shell/pull_json.sh deter_cerrado_public_d
-    /usr/local/scripts-shell/pull_json.sh deter_cerrado_month_d
+    /usr/local/scripts-shell/generateJSON.sh daily_d
+    /usr/local/scripts-shell/generateJSON.sh month_d
+    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
+    /usr/local/scripts-shell/generateJSON.sh month_auth_d
     /usr/local/scripts-shell/generateSHP.sh
 
 fi;

@@ -7,13 +7,13 @@ So we use one technique that consist to write the environment variables inside a
 
 ## Scripts workflow
 
-The entry point is validate_site_before.sh that test if WFS service is up using http_status_code_test.sh. After validation, calls pull_json.sh passing one layer name. Are three layers to each biome, so generating three JSON files.
+The entry point is entry_point.sh that test if WFS service is up using http_status_code_test.sh. After validation, calls generateJSON.sh passing one layer name. Are three layers to each biome, so generating three JSON files.
 
 After calls of each biome, the generateSHP.sh is called for export the main table of the corresponding biome database to two Shapefiles using two filters over total area selecting all data greater than or equal to one km² and another filter selecting all data  greater than or equal to 6,25 km².
 
-- validate_site_before.sh
+- entry_point.sh
   - http_status_code_test.sh
-  - pull_json.sh
+  - generateJSON.sh
   - generateSHP.sh
 
 ## Base configuration

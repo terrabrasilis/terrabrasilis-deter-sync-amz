@@ -1,15 +1,15 @@
 # To build image for this dockerfile use this command:
-#   docker build -t terrabrasilis/deter-scripts:v0.6 -f env-scripts/Dockerfile --no-cache .
+#   docker build -t terrabrasilis/deter-generated-files:v0.1 -f env-scripts/Dockerfile --no-cache .
 #
 # To run without compose and without shell terminal use this command:
-#   docker run -d --rm --name terrabrasilis_deter_scripts terrabrasilis/deter-scripts:v0.6
-#   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/usr/local/data terrabrasilis/deter-scripts:v0.6
+#   docker run -d --rm --name terrabrasilis_deter_scripts terrabrasilis/deter-generated-files:v0.1
+#   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/deter-generated-files:v0.1
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM ubuntu:18.04
-LABEL "br.inpe.obt"="INPE/OBT-TerraBrasilis" \
-br.inpe.obt.terrabrasilis="script-tasks" \
-version="v0.6" \
+LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
+br.inpe.dpi.terrabrasilis="script-tasks" \
+version="v0.1" \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="Scripts to generate JSON files from GeoServer layers and generate \
@@ -22,7 +22,6 @@ RUN apt-get update \
     gnupg \
     cron \
     tzdata \
-    nginx \
     bash \
     curl \
     zip
@@ -41,7 +40,7 @@ ENV TZ=America/Sao_Paulo
 
 # define the install path env var
 ENV INSTALL_PATH /usr/local
-ENV NGINX_ROOT_DIR /var/www/html
+ENV SHARED_DIR /data/files
 
 ## THE ENV VARS ARE NOT READED INSIDE A SHELL SCRIPT THAT RUNS IN CRON TASKS.
 ## SO, WE WRITE INSIDE THE /etc/environment FILE AND READS BEFORE RUN THE SCRIPT.
@@ -52,35 +51,39 @@ RUN echo "export GEOSERVER_BASE_URL=\"http://terrabrasilis.dpi.inpe.br\"" >> /et
     && echo "export GEOSERVER_PASS_FILE=\"/run/secrets/geoserver.pass.dashboard\"" >> /etc/environment \
     && echo "export POSTGRES_USER_FILE=\"/run/secrets/postgres.user.geoserver\"" >> /etc/environment \
     && echo "export POSTGRES_PASS_FILE=\"/run/secrets/postgres.pass.geoserver\"" >> /etc/environment \
-    && echo "export NGINX_ROOT_DIR=\"/var/www/html\"" >> /etc/environment
+    && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment
 
 # INSTALL SCRIPTS
 # ------------------------------------------------------
 RUN mkdir -p $INSTALL_PATH/scripts-shell/
 COPY scripts-shell/ $INSTALL_PATH/scripts-shell/
-RUN chmod +x $INSTALL_PATH/scripts-shell/*
+RUN chmod +x $INSTALL_PATH/scripts-shell/*.sh
 
 # install and enable cron job scripts
-ADD env-scripts/cron_exec.sh $INSTALL_PATH/
-RUN chmod +x $INSTALL_PATH/cron_exec.sh
+ADD env-scripts/exec_daily.sh $INSTALL_PATH/
+ADD env-scripts/exec_weekly.sh $INSTALL_PATH/
+RUN chmod +x $INSTALL_PATH/*.sh
 # install and enable config cron
+# for daily
 ADD env-scripts/daily.cron /etc/cron.d/daily-cron
 RUN chmod 0644 /etc/cron.d/daily-cron
 RUN crontab /etc/cron.d/daily-cron
-RUN mkdir -p /logs && touch /logs/cron.log
+# for weekly
+ADD env-scripts/weekly.cron /etc/cron.d/weekly-cron
+RUN chmod 0644 /etc/cron.d/weekly-cron
+RUN crontab /etc/cron.d/weekly-cron
+# logs to output cron exec
+RUN mkdir -p /logs && touch /logs/exec_daily.log && touch /logs/exec_weekly.log
+
+# the data directory for put generated files 
+RUN mkdir -p ${SHARED_DIR}
 
 # Script to copy secrets from files for env vars
 ADD env-scripts/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
 RUN chmod +x $INSTALL_PATH/bin/*.sh
 RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 
-# forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-	&& ln -sf /dev/stderr /var/log/nginx/error.log \
-  && rm $NGINX_ROOT_DIR/index.nginx-debian.html
-
-EXPOSE 80
-
-VOLUME ["${NGINX_ROOT_DIR}","/logs"]
+# expose shared dirs
+VOLUME ["${SHARED_DIR}","/logs"]
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
