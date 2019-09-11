@@ -40,7 +40,7 @@ $configTemplate = "<?php\n".
 "				'host' => '".$_ENV["POSTGRES_HOST"]."',\n".
 "				'user' => '".file_get_contents($_ENV["POSTGRES_USER_FILE"])."',\n".
 "				'pass' => '".file_get_contents($_ENV["POSTGRES_PASS_FILE"])."',\n".
-"				'dbname' => 'DETER-B',\n".
+"				'dbname' => '".$_ENV["OUTPUT_DATABASE"]."',\n".
 "				'port' => 5432\n".
 "		);\n".
 "		return \$config;\n".

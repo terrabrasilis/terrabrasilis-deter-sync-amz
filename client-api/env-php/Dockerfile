@@ -7,8 +7,8 @@
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM php:5.6-cli
-LABEL "br.inpe.obt"="INPE/OBT-TerraBrasilis" \
-br.inpe.obt.terrabrasilis="client-api" \
+LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
+br.inpe.dpi.terrabrasilis="client-api" \
 version="v0.4" \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
@@ -44,13 +44,13 @@ ADD env-php/cron_exec.sh $INSTALL_PATH/
 RUN chmod +x $INSTALL_PATH/cron_exec.sh
 # install and enable config cron
 ADD env-php/daily.cron /etc/cron.d/daily-cron
-RUN chmod 0644 /etc/cron.d/daily-cron
-RUN crontab /etc/cron.d/daily-cron
+RUN chmod 0644 /etc/cron.d/daily-cron \
+    && crontab /etc/cron.d/daily-cron
 
 # Script to copy secrets from files for env vars
 ADD env-php/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
-RUN chmod +x $INSTALL_PATH/bin/docker-entrypoint.sh
-RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
+RUN chmod +x $INSTALL_PATH/bin/docker-entrypoint.sh \
+    && ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 
 VOLUME ["/usr/local/php-client/rawData","/usr/local/php-client/log"]
 

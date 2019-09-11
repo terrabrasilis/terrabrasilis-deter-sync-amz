@@ -72,6 +72,25 @@ class PostgreSQLDataService extends PostgreSQLService {
 		$query = "TRUNCATE ".$tableName." RESTART IDENTITY;";
 		return $this->execQueryNoResult($tableName, $query, $error);
 	}
+
+	/**
+	 * Update the publish_month collumn.
+	 * @param string $error, allow read the error message.
+	 * @return boolean, true on success or false otherwise.
+	 */
+	public function updatePublishMonth(&$error) {
+
+		$config = ServiceConfiguration::defines();
+
+		if( empty ( $config ) ) {
+			$error = "Missing the metadata tables configuration.";
+			return false;
+		}
+
+		$tableName = $config["SCHEMA"].".".$config["DATA_TABLE"];
+		$query = "UPDATE ".$tableName." SET publish_month=overlay(date::varchar placing '01' from 9 for 2)::date;";
+		return $this->execQueryNoResult($tableName, $query, $error);
+	}
 	
 	/**
 	 * Insert data into PostgreSQL table.
@@ -135,6 +154,15 @@ class PostgreSQLDataService extends PostgreSQLService {
 
 		if(!$this->pushRawData($data, $error)) {
 			$error .= "\nFailure on push data to data table.";
+			$this->writeErrorLog($error);
+			if($this->stop(false)){// rollback
+				$error .= "\nRollback command has failed.";
+			}
+			return false;
+		}
+
+		if(!$this->updatePublishMonth($error)) {
+			$error .= "\nFailure on UPDATE publish_month collumn.";
 			$this->writeErrorLog($error);
 			if($this->stop(false)){// rollback
 				$error .= "\nRollback command has failed.";
