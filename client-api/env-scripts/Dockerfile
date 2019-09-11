@@ -16,7 +16,7 @@ description="Scripts to generate JSON files from GeoServer layers and generate \
 shapefiles from database for DETER project of the Cerrado and Amazon."
 #-------------Application Specific Stuff ----------------------------------------------------
 
-RUN apt-get update \
+RUN apt-get -o Acquire::ForceIPv4=true update \
     && apt-get install -y \
     wget \
     gnupg \
@@ -29,7 +29,7 @@ RUN apt-get update \
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
-RUN apt-get update \
+RUN apt-get -o Acquire::ForceIPv4=true update \
       && apt-get install -y --no-install-recommends \
            postgresql-10-postgis-2.5 \
            postgis \
@@ -47,10 +47,11 @@ ENV SHARED_DIR /data/files
 RUN echo "export GEOSERVER_BASE_URL=\"http://terrabrasilis.dpi.inpe.br\"" >> /etc/environment \
     && echo "export GEOSERVER_BASE_PATH=\"geoserver/ows\"" >> /etc/environment \
     && echo "export POSTGRES_HOST=\"150.163.2.177\"" >> /etc/environment \
-    && echo "export GEOSERVER_USER_FILE=\"/run/secrets/geoserver.user.dashboard\"" >> /etc/environment \
-    && echo "export GEOSERVER_PASS_FILE=\"/run/secrets/geoserver.pass.dashboard\"" >> /etc/environment \
+    && echo "export POSTGRES_PORT=\"5432\"" >> /etc/environment \
     && echo "export POSTGRES_USER_FILE=\"/run/secrets/postgres.user.geoserver\"" >> /etc/environment \
     && echo "export POSTGRES_PASS_FILE=\"/run/secrets/postgres.pass.geoserver\"" >> /etc/environment \
+    && echo "export GEOSERVER_USER_FILE=\"/run/secrets/geoserver.user.dashboard\"" >> /etc/environment \
+    && echo "export GEOSERVER_PASS_FILE=\"/run/secrets/geoserver.pass.dashboard\"" >> /etc/environment \
     && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment
 
 # INSTALL SCRIPTS
@@ -66,12 +67,13 @@ RUN chmod +x $INSTALL_PATH/*.sh
 # install and enable config cron
 # for daily
 ADD env-scripts/daily.cron /etc/cron.d/daily-cron
-RUN chmod 0644 /etc/cron.d/daily-cron
-RUN crontab /etc/cron.d/daily-cron
-# for weekly
+RUN chmod 0644 /etc/cron.d/daily-cron \
+    && crontab /etc/cron.d/daily-cron
+# for weekly (append into crontab)
 ADD env-scripts/weekly.cron /etc/cron.d/weekly-cron
-RUN chmod 0644 /etc/cron.d/weekly-cron
-RUN crontab /etc/cron.d/weekly-cron
+RUN chmod 0644 /etc/cron.d/weekly-cron \
+    && crontab -l | { cat; cat /etc/cron.d/weekly-cron; } | crontab -
+
 # logs to output cron exec
 RUN mkdir -p /logs && touch /logs/exec_daily.log && touch /logs/exec_weekly.log
 
@@ -80,8 +82,8 @@ RUN mkdir -p ${SHARED_DIR}
 
 # Script to copy secrets from files for env vars
 ADD env-scripts/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
-RUN chmod +x $INSTALL_PATH/bin/*.sh
-RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
+RUN chmod +x $INSTALL_PATH/bin/*.sh \
+    && ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 
 # expose shared dirs
 VOLUME ["${SHARED_DIR}","/logs"]

@@ -1,6 +1,6 @@
 # The tasks - Shell Scripts for JSON and SHP pre-generation
 
-There are two tasks here. A task to update the DETER release date every Friday and another to generate files like JSONs and Shapefiles every day. These files are delivery by one authentication-verified API.
+There are two tasks here. A task to update the DETER release date every Friday and another to generate files like JSONs and Shapefiles every day. These files are delivery by one authentication-verified API called [file-delivery](https://github.com/Terrabrasilis/file-delivery).
 
 Defines the environment to run the shell scripts used for produce JSON and shapefiles after the data daily synchron of the DETER-B Project for Amazon and Cerrado Biomes. The files Json and Shapefile will be used by analysis dashboards and the default download tool at TerraBrasilis.
 
