@@ -6,7 +6,7 @@
 export PGUSER=$(cat "$POSTGRES_USER_FILE")
 export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
 
-QUERY="UPDATE public.deter_publish_date SET date=now() WHERE blocked=0;"
+QUERY="UPDATE public.deter_publish_date SET date=(now() - interval '1 week') WHERE blocked=0;"
 
 
 PG_CON="-d DETER-B -h $POSTGRES_HOST -p $POSTGRES_PORT"
