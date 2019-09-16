@@ -1,9 +1,9 @@
 # To build image for this dockerfile use this command:
-#   docker build -t terrabrasilis/deter-generated-files:v0.1 -f env-scripts/Dockerfile --no-cache .
+#   docker build -t terrabrasilis/deter-generate-files:v0.1 -f env-scripts/Dockerfile --no-cache .
 #
 # To run without compose and without shell terminal use this command:
-#   docker run -d --rm --name terrabrasilis_deter_scripts terrabrasilis/deter-generated-files:v0.1
-#   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/deter-generated-files:v0.1
+#   docker run -d --rm --name terrabrasilis_deter_scripts terrabrasilis/deter-generate-files:v0.1
+#   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/deter-generate-files:v0.1
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM ubuntu:18.04
