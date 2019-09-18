@@ -51,9 +51,9 @@ cd $WORKSPACE_DIR/
 pgsql2shp -f $WORKSPACE_DIR/deter_all -h $HOST -u $USER -P $PASS $DB "$QUERY_AUTH $FILTER_ALL"
 pgsql2shp -f $WORKSPACE_DIR/deter_public -h $HOST -u $USER -P $PASS $DB "$QUERY_PUBLIC $FILTER_PUBLIC"
 
-zip $PROJECT_NAME"_all.zip" deter_all.shp deter_all.shx deter_all.prj deter_all.dbf
-zip $PROJECT_NAME"_public.zip" deter_public.shp deter_public.shx deter_public.prj deter_public.dbf
+zip "all.zip" deter_all.shp deter_all.shx deter_all.prj deter_all.dbf
+zip "public.zip" deter_public.shp deter_public.shx deter_public.prj deter_public.dbf
 
 # move files to target dir for publish
-mv $WORKSPACE_DIR/$PROJECT_NAME"_all.zip" $TARGET_DIR
-mv $WORKSPACE_DIR/$PROJECT_NAME"_public.zip" $TARGET_DIR
+mv $WORKSPACE_DIR/"all.zip" $TARGET_DIR
+mv $WORKSPACE_DIR/"public.zip" $TARGET_DIR
