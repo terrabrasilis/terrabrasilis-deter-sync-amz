@@ -1,15 +1,15 @@
 # To build image for this dockerfile use this command:
-#   docker build -t terrabrasilis/deter-amz-sync-client:v0.4 -f env-php/Dockerfile --no-cache .
+#   docker build -t terrabrasilis/deter-amz-sync-client:v0.5 -f env-php/Dockerfile --no-cache .
 #
 # To run without compose and without shell terminal use this command:
-#   docker run -d --rm --name terrabrasilis_deter_sync_client terrabrasilis/deter-amz-sync-client:v0.4
-#   docker run -d --rm --name terrabrasilis_deter_sync_client -v $PWD:/usr/local/data terrabrasilis/deter-amz-sync-client:v0.4
+#   docker run -d --rm --name terrabrasilis_deter_sync_client terrabrasilis/deter-amz-sync-client:v0.5
+#   docker run -d --rm --name terrabrasilis_deter_sync_client -v $PWD:/usr/local/data terrabrasilis/deter-amz-sync-client:v0.5
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM php:5.6-cli
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="client-api" \
-version="v0.4" \
+version="v0.5" \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="API's client to sync database between INPE/CRA and INPE/SJC of the DETERB project of the Amazon."

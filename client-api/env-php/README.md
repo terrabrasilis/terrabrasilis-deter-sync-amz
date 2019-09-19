@@ -24,6 +24,8 @@ The allow configuration is:
 - the user and password for access the SGDB postgres (use Docker Secrets as below);
   - POSTGRES_USER_FILE: /run/secrets/postgres.user.geoserver
   - POSTGRES_PASS_FILE: /run/secrets/postgres.pass.geoserver
+- The output database name;
+  - OUTPUT_DATABASE: "defined on docker stack file"
 
 ```yaml
 echo "email" |docker secret create google.mail.user -
@@ -43,7 +45,7 @@ This software needs the pre-defined names for database and table. So, if you wan
 To build image for this dockerfile use this command:
 
 ```bash
-docker build -t terrabrasilis/deter-amz-sync-client:v0.3 -f env-php/Dockerfile --no-cache .
+docker build -t terrabrasilis/deter-amz-sync-client:v0.5 -f env-php/Dockerfile --no-cache .
 ```
 
 ## Run on docker (dev)
@@ -59,7 +61,7 @@ RUN echo "API_user" > /run/secrets/api.sync.deterb.amz.user \
 ```
 
 ```bash
-docker run -d --rm --name terrabrasilis_deter_client_api terrabrasilis/deter-amz-sync-client:v0.3
+docker run -d --rm --name terrabrasilis_deter_client_api terrabrasilis/deter-amz-sync-client:v0.5
 ```
 
 ### To login inside container
