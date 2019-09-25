@@ -1,6 +1,6 @@
 # Docker Client API - HTTP client
 
-Defines the environment to run the php client API described in [php-client README](https://gitlab.dpi.inpe.br/terrabrasilis/terrabrasilis/tree/latest/deterb-sync/client-api/php-client)
+Defines the environment to run the php client API described in [php-client README](https://github.com/Terrabrasilis/terrabrasilis-deter-sync-amz/tree/master/client-api/php-client)
 
 ## Scripts workflow
 
