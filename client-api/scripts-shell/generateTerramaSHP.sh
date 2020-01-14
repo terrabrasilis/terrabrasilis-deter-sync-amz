@@ -2,6 +2,8 @@
 # get global env vars from Docker Secrets
 export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 export POSTGRES_PASS=$(cat "$POSTGRES_PASS_FILE")
+export FTP_USER=$(cat "$FTP_USER_FILE")
+export FTP_PASS=$(cat "$FTP_PASS_FILE")
 
 # Configs for database connect
 HOST=$POSTGRES_HOST
@@ -19,7 +21,7 @@ if [ "$PROJECT_NAME" == "deter-amz" ];
 then
 	DB="DETER-B"
 	FILTER_ALL="0.01"
-	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date_audit = '$DATE_NOW') as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
+	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date_audit = (now() - '1 day'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
 fi;
 
 # target dir for generated files
@@ -40,3 +42,6 @@ zip "$OUTPUT_FILE_NAME.zip" "$OUTPUT_FILE_NAME.shp" "$OUTPUT_FILE_NAME.shx" "$OU
 
 # move files to target dir for publish
 mv "$WORKSPACE_DIR/$OUTPUT_FILE_NAME.zip" $TARGET_DIR
+
+# upload file to FTP
+curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.zip" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/

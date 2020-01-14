@@ -1,15 +1,15 @@
 # To build image for this dockerfile use this command:
-#   docker build -t terrabrasilis/deter-generate-files:v0.8 -f env-scripts/Dockerfile --no-cache .
+#   docker build -t terrabrasilis/deter-generate-files:v0.9 -f env-scripts/Dockerfile --no-cache .
 #
 # To run without compose and without shell terminal use this command:
-#   docker run -d --rm --name terrabrasilis_deter_scripts terrabrasilis/deter-generate-files:v0.8
-#   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/deter-generate-files:v0.8
+#   docker run -d --rm --name terrabrasilis_deter_scripts terrabrasilis/deter-generate-files:v0.9
+#   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/deter-generate-files:v0.9
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM ubuntu:18.04
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="script-tasks" \
-version="v0.8" \
+version="v0.9" \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="Scripts to generate JSON files from GeoServer layers and generate \
@@ -41,7 +41,7 @@ ENV TZ=America/Sao_Paulo
 # define the install path env var
 ENV INSTALL_PATH /usr/local
 ENV SHARED_DIR /data/files
-ENV STATIC_FILES_DIR /data/download/static/deter-amz
+ENV STATIC_FILES_DIR /data/terrama/deter-amz
 
 ## THE ENV VARS ARE NOT READED INSIDE A SHELL SCRIPT THAT RUNS IN CRON TASKS.
 ## SO, WE WRITE INSIDE THE /etc/environment FILE AND READS BEFORE RUN THE SCRIPT.
@@ -53,8 +53,10 @@ RUN echo "export GEOSERVER_BASE_URL=\"http://terrabrasilis.dpi.inpe.br\"" >> /et
     && echo "export POSTGRES_PASS_FILE=\"/run/secrets/postgres.pass.geoserver\"" >> /etc/environment \
     && echo "export GEOSERVER_USER_FILE=\"/run/secrets/geoserver.user.dashboard\"" >> /etc/environment \
     && echo "export GEOSERVER_PASS_FILE=\"/run/secrets/geoserver.pass.dashboard\"" >> /etc/environment \
+    && echo "export FTP_USER_FILE=\"/run/secrets/ftp.user.queimadas\"" >> /etc/environment \
+    && echo "export FTP_PASS_FILE=\"/run/secrets/ftp.pass.queimadas\"" >> /etc/environment \
     && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment \
-    && echo "export STATIC_FILES_DIR=\"/data/download/static/deter-amz\"" >> /etc/environment
+    && echo "export STATIC_FILES_DIR=\"/data/terrama/deter-amz\"" >> /etc/environment
 
 # INSTALL SCRIPTS
 # ------------------------------------------------------
@@ -81,6 +83,9 @@ RUN mkdir -p /logs && touch /logs/exec_daily.log && touch /logs/exec_weekly.log
 
 # the data directory for put generated files 
 RUN mkdir -p ${SHARED_DIR}
+
+# the data directory for put generated files 
+RUN mkdir -p ${STATIC_FILES_DIR}
 
 # Script to copy secrets from files for env vars
 ADD env-scripts/docker-entrypoint.sh $INSTALL_PATH/bin/docker-entrypoint.sh
