@@ -41,6 +41,7 @@ ENV TZ=America/Sao_Paulo
 # define the install path env var
 ENV INSTALL_PATH /usr/local
 ENV SHARED_DIR /data/files
+ENV STATIC_FILES_DIR /data/download/static/deter-amz
 
 ## THE ENV VARS ARE NOT READED INSIDE A SHELL SCRIPT THAT RUNS IN CRON TASKS.
 ## SO, WE WRITE INSIDE THE /etc/environment FILE AND READS BEFORE RUN THE SCRIPT.
@@ -52,7 +53,8 @@ RUN echo "export GEOSERVER_BASE_URL=\"http://terrabrasilis.dpi.inpe.br\"" >> /et
     && echo "export POSTGRES_PASS_FILE=\"/run/secrets/postgres.pass.geoserver\"" >> /etc/environment \
     && echo "export GEOSERVER_USER_FILE=\"/run/secrets/geoserver.user.dashboard\"" >> /etc/environment \
     && echo "export GEOSERVER_PASS_FILE=\"/run/secrets/geoserver.pass.dashboard\"" >> /etc/environment \
-    && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment
+    && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment \
+    && echo "export STATIC_FILES_DIR=\"/data/download/static/deter-amz\"" >> /etc/environment
 
 # INSTALL SCRIPTS
 # ------------------------------------------------------
@@ -86,6 +88,6 @@ RUN chmod +x $INSTALL_PATH/bin/*.sh \
     && ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 
 # expose shared dirs
-VOLUME ["${SHARED_DIR}","/logs"]
+VOLUME ["${STATIC_FILES_DIR}","${SHARED_DIR}","/logs"]
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
