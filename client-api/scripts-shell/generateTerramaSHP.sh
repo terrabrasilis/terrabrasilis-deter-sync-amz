@@ -21,7 +21,7 @@ if [ "$PROJECT_NAME" == "deter-amz" ];
 then
 	DB="DETER-B"
 	FILTER_ALL="0.01"
-	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date_audit = (now() - '1 day'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
+	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date = (now() - '3 day'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
 fi;
 
 # target dir for generated files
@@ -38,10 +38,20 @@ cd $WORKSPACE_DIR/
 
 pgsql2shp -f $WORKSPACE_DIR/$OUTPUT_FILE_NAME -h $HOST -u $USER -P $PASS $DB "$QUERY_AUTH $FILTER_ALL"
 
-zip "$OUTPUT_FILE_NAME.zip" "$OUTPUT_FILE_NAME.shp" "$OUTPUT_FILE_NAME.shx" "$OUTPUT_FILE_NAME.prj" "$OUTPUT_FILE_NAME.dbf"
+# Disable compress
+#zip "$OUTPUT_FILE_NAME.zip" "$OUTPUT_FILE_NAME.shp" "$OUTPUT_FILE_NAME.shx" "$OUTPUT_FILE_NAME.prj" "$OUTPUT_FILE_NAME.dbf"
 
 # move files to target dir for publish
-mv "$WORKSPACE_DIR/$OUTPUT_FILE_NAME.zip" $TARGET_DIR
+mv "$WORKSPACE_DIR/$OUTPUT_FILE_NAME.*" $TARGET_DIR
 
-# upload file to FTP
-curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.zip" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/
+if [[ -f "$TARGET_DIR/$OUTPUT_FILE_NAME.shp" ]];
+then
+    #echo "File exists!"
+	# upload file to FTP
+	curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+else
+	echo "File $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+fi;
+
+# remove files after transferency
+rm "$TARGET_DIR/$OUTPUT_FILE_NAME.*"
