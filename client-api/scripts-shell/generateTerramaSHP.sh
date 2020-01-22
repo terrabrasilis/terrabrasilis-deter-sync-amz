@@ -10,7 +10,7 @@ HOST=$POSTGRES_HOST
 USER=$POSTGRES_USER
 PASS=$POSTGRES_PASS
 
-DATE_NOW=$(date '+%Y-%m-%d')
+DATE_NOW=$(date +%Y-%m-%dT%T)
 OUTPUT_FILE_NAME="deter_mt_$DATE_NOW"
 
 # normalize output columns
@@ -38,20 +38,21 @@ cd $WORKSPACE_DIR/
 
 pgsql2shp -f $WORKSPACE_DIR/$OUTPUT_FILE_NAME -h $HOST -u $USER -P $PASS $DB "$QUERY_AUTH $FILTER_ALL"
 
-# Disable compress
-#zip "$OUTPUT_FILE_NAME.zip" "$OUTPUT_FILE_NAME.shp" "$OUTPUT_FILE_NAME.shx" "$OUTPUT_FILE_NAME.prj" "$OUTPUT_FILE_NAME.dbf"
-
 # move files to target dir for publish
 mv "$WORKSPACE_DIR/$OUTPUT_FILE_NAME.*" $TARGET_DIR
 
 if [[ -f "$TARGET_DIR/$OUTPUT_FILE_NAME.shp" ]];
 then
-    #echo "File exists!"
+	cd "$TARGET_DIR"
+
+	zip "$OUTPUT_FILE_NAME.zip" "$OUTPUT_FILE_NAME.shp" "$OUTPUT_FILE_NAME.shx" "$OUTPUT_FILE_NAME.prj" "$OUTPUT_FILE_NAME.dbf"
+
 	# upload file to FTP
-	curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+	curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.zip" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+	#curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
 else
 	echo "File $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
 fi;
 
-# remove files after transferency
+# remove files after transfer
 rm "$TARGET_DIR/$OUTPUT_FILE_NAME.*"
