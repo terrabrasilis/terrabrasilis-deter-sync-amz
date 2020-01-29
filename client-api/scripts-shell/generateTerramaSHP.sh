@@ -21,7 +21,7 @@ if [ "$PROJECT_NAME" == "deter-amz" ];
 then
 	DB="DETER-B"
 	FILTER_ALL="0.01"
-	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date = (now() - '3 day'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
+	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date = (now() - '1 week'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
 fi;
 
 # target dir for generated files
