@@ -1,4 +1,4 @@
 # m h  dom mon dow   command
 # Tasks to syncronize and check state of the last syncronize for DETER-B AMZ project
-03 06 * * * /usr/local/bin/php /usr/local/php-client/index.php
-00 07 * * * /usr/local/bin/php /usr/local/php-client/checkStatus.php
+03 08 * * * /usr/local/bin/php /usr/local/php-client/index.php
+00 09 * * * /usr/local/bin/php /usr/local/php-client/checkStatus.php
