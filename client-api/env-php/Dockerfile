@@ -1,21 +1,25 @@
 # To build image for this dockerfile use this command:
-#   docker build -t terrabrasilis/deter-amz-sync-client:v1.0 -f env-php/Dockerfile --no-cache .
+#   docker build -t terrabrasilis/deter-amz-sync-client:vx.y -f env-php/Dockerfile --no-cache .
 #
 # To run without compose and without shell terminal use this command:
-#   docker run -d --rm --name terrabrasilis_deter_sync_client terrabrasilis/deter-amz-sync-client:v1.0
-#   docker run -d --rm --name terrabrasilis_deter_sync_client -v $PWD:/usr/local/data terrabrasilis/deter-amz-sync-client:v1.0
+#   docker run -d --rm --name terrabrasilis_deter_sync_client terrabrasilis/deter-amz-sync-client:vx.y
+#   docker run -d --rm --name terrabrasilis_deter_sync_client -v $PWD:/usr/local/data terrabrasilis/deter-amz-sync-client:vx.y
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM php:5.6-cli
+
+ARG VERSION=x.y
+ENV VERSION=$VERSION
+
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="client-api" \
-version="v1.0" \
+version=${VERSION} \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="API's client to sync database between INPE/CRA and INPE/SJC of the DETERB project of the Amazon."
 #-------------Application Specific Stuff ----------------------------------------------------
 
-RUN apt-get update \
+RUN apt-get -o Acquire::ForceIPv4=true update \
     && apt-get install -y \
     libpq-dev \
     cron \
