@@ -21,7 +21,7 @@ if [ "$PROJECT_NAME" == "deter-amz" ];
 then
 	DB="DETER-B"
 	FILTER_ALL="0.01"
-	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date = (now() - '1 week'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
+	QUERY="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date = (now() - '1 week'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
 fi;
 
 # target dir for generated files
@@ -36,10 +36,10 @@ fi;
 
 cd $WORKSPACE_DIR/
 
-pgsql2shp -f $WORKSPACE_DIR/$OUTPUT_FILE_NAME -h $HOST -u $USER -P $PASS $DB "$QUERY_AUTH $FILTER_ALL"
+pgsql2shp -f $WORKSPACE_DIR/$OUTPUT_FILE_NAME -h $HOST -u $USER -P $PASS $DB "$QUERY $FILTER_ALL"
 
 # move files to target dir for publish
-mv "$WORKSPACE_DIR/$OUTPUT_FILE_NAME.*" $TARGET_DIR
+mv $WORKSPACE_DIR/$OUTPUT_FILE_NAME.* $TARGET_DIR
 
 if [[ -f "$TARGET_DIR/$OUTPUT_FILE_NAME.shp" ]];
 then
@@ -55,4 +55,4 @@ else
 fi;
 
 # remove files after transfer
-rm "$TARGET_DIR/$OUTPUT_FILE_NAME.*"
+rm $TARGET_DIR/$OUTPUT_FILE_NAME.*
