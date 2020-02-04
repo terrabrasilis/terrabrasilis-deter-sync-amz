@@ -28,12 +28,6 @@ else
 	FILTER_ALL="0.01"
     QUERY_PUBLIC="SELECT $OUTPUT_COLUMNS FROM (SELECT gid||'_0' as gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality,  uf, uc, geom FROM deter_table WHERE date > '2018-07-31' AND date_audit <= (SELECT date FROM public.deter_publish_date) UNION SELECT gid||'_1', classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality,  uf, uc, geom FROM deter_history) as tb1 WHERE tb1.areatotalkm >= "
 	QUERY_AUTH="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid||'_0' as gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality,  uf, uc, geom FROM deter_table WHERE date > '2018-07-31' UNION SELECT gid||'_1', classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality,  uf, uc, geom FROM deter_history) as tb1 WHERE tb1.areatotalkm >= "
-	
-	# TODO: APAGAR ESTE BLOCO DE UPDATE QUANDO GERAR E TESTAR O PHP CLIENT 
-	# Update publish_month column to working with time dimension on GeoServer.
-	UPDATE="UPDATE terrabrasilis.deter_table SET publish_month=overlay(date::varchar placing '01' from 9 for 2)::date"
-	export PGPASSWORD=$PASS
-	psql -h $HOST -U $USER -d $DB -c "$UPDATE"
 fi;
 
 # target dir for generated files
