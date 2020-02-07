@@ -10,7 +10,7 @@ HOST=$POSTGRES_HOST
 USER=$POSTGRES_USER
 PASS=$POSTGRES_PASS
 
-DATE_NOW=$(date +%Y-%m-%dT%T)
+DATE_NOW=$(date +%Y-%m-%dT%H%M%S)
 OUTPUT_FILE_NAME="deter_mt_$DATE_NOW"
 
 # normalize output columns
