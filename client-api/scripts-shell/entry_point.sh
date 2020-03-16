@@ -36,4 +36,7 @@ then
     /usr/local/scripts-shell/generateJSON.sh month_auth_d
     /usr/local/scripts-shell/generateSHP.sh
 
+    export PROJECT_NAME=deter-fm
+    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
+    /usr/local/scripts-shell/generateJSON.sh month_auth_d
 fi;
