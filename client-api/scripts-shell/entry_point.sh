@@ -20,24 +20,26 @@ esac
 if [ "$succeeded" -eq "1" ];
 then
     
-    export PROJECT_NAME=deter-amz
-    /usr/local/scripts-shell/generateJSON.sh daily_d
-    /usr/local/scripts-shell/generateJSON.sh month_d
-    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
-    /usr/local/scripts-shell/generateJSON.sh month_auth_d
-    /usr/local/scripts-shell/generateSHP.sh
-    /usr/local/scripts-shell/generateTerramaSHP.sh
-    /usr/local/scripts-shell/copyDegradations.sh
+   export PROJECT_NAME=deter-amz
+   /usr/local/scripts-shell/generateJSON.sh daily_d
+   /usr/local/scripts-shell/generateJSON.sh month_d
+   /usr/local/scripts-shell/generateJSON.sh daily_auth_d
+   /usr/local/scripts-shell/generateJSON.sh month_auth_d
+   /usr/local/scripts-shell/generateSHP.sh
+   /usr/local/scripts-shell/copyDegradations.sh
 
-    export PROJECT_NAME=deter-cerrado
-    /usr/local/scripts-shell/generateJSON.sh daily_d
-    /usr/local/scripts-shell/generateJSON.sh month_d
-    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
-    /usr/local/scripts-shell/generateJSON.sh month_auth_d
-    /usr/local/scripts-shell/generateSHP.sh
+   export PROJECT_NAME=deter-cerrado
+   /usr/local/scripts-shell/generateJSON.sh daily_d
+   /usr/local/scripts-shell/generateJSON.sh month_d
+   /usr/local/scripts-shell/generateJSON.sh daily_auth_d
+   /usr/local/scripts-shell/generateJSON.sh month_auth_d
+   /usr/local/scripts-shell/generateSHP.sh
 
-    export PROJECT_NAME=deter-fm
-    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
-    /usr/local/scripts-shell/generateJSON.sh month_auth_d
-    /usr/local/scripts-shell/generateSHP.sh
+   export PROJECT_NAME=deter-fm
+   /usr/local/scripts-shell/generateJSON.sh daily_auth_d
+   /usr/local/scripts-shell/generateJSON.sh month_auth_d
+   /usr/local/scripts-shell/generateSHP.sh
+
+   export PROJECT_NAME=deter-terrama-mt
+   /usr/local/scripts-shell/generateTerramaSHP.sh
 fi;

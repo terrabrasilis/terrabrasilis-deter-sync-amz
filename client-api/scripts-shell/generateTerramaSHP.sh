@@ -1,14 +1,13 @@
 #!/bin/bash
 # get global env vars from Docker Secrets
-export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
-export POSTGRES_PASS=$(cat "$POSTGRES_PASS_FILE")
+export PGUSER=$(cat "$POSTGRES_USER_FILE")
+export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
 export FTP_USER=$(cat "$FTP_USER_FILE")
 export FTP_PASS=$(cat "$FTP_PASS_FILE")
 
 # Configs for database connect
 HOST=$POSTGRES_HOST
-USER=$POSTGRES_USER
-PASS=$POSTGRES_PASS
+PORT=$POSTGRES_PORT
 
 DATE_NOW=$(date +%Y-%m-%dT%H%M%S)
 OUTPUT_FILE_NAME="deter_mt_$DATE_NOW"
@@ -17,11 +16,11 @@ OUTPUT_FILE_NAME="deter_mt_$DATE_NOW"
 OUTPUT_COLUMNS="tb1.gid, tb1.classname, tb1.quadrant, tb1.path_row, tb1.view_date::varchar, tb1.sensor, tb1.satellite, tb1.areauckm, tb1.uc, tb1.areamunkm, tb1.municipality, tb1.uf, tb1.geom"
 
 
-if [ "$PROJECT_NAME" == "deter-amz" ];
+if [ "$PROJECT_NAME" == "deter-terrama-mt" ];
 then
-	DB="DETER-B"
+	DB="deter_terrama_mt"
 	FILTER_ALL="0.01"
-	QUERY="SELECT $OUTPUT_COLUMNS, tb1.areatotalkm FROM (SELECT gid, classname, quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county as municipality, uf, uc, geom FROM deter_table WHERE date = (now() - '1 week'::interval)::date ) as tb1 WHERE tb1.uf='MT' AND tb1.areatotalkm >= "
+	QUERY="SELECT $OUTPUT_COLUMNS FROM public.deter_mt as tb1 WHERE tb1.areatotalkm >= "
 fi;
 
 # target dir for generated files
@@ -36,7 +35,7 @@ fi;
 
 cd $WORKSPACE_DIR/
 
-pgsql2shp -f $WORKSPACE_DIR/$OUTPUT_FILE_NAME -h $HOST -u $USER -P $PASS $DB "$QUERY $FILTER_ALL"
+pgsql2shp -f $WORKSPACE_DIR/$OUTPUT_FILE_NAME -h $HOST -u $PGUSER -P $PGPASSWORD -p $PORT $DB "$QUERY $FILTER_ALL"
 
 # move files to target dir for publish
 mv $WORKSPACE_DIR/$OUTPUT_FILE_NAME.* $TARGET_DIR
@@ -50,6 +49,22 @@ then
 	# upload file to FTP
 	curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.zip" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
 	#curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+
+# update the date of last data for keep controller 
+UPDATE="UPDATE public.last_release_mt SET amz_release_date=(SELECT MAX(view_date) FROM public.deter_mt WHERE source='deter_amz');"
+
+PG_CON="-d $DB -h $HOST -p $PORT"
+psql $PG_CON << EOF
+$UPDATE
+EOF
+
+UPDATE="UPDATE public.last_release_mt SET cerrado_release_date=(SELECT MAX(view_date) FROM public.deter_mt WHERE source='deter_cerrado');"
+
+PG_CON="-d $DB -h $HOST -p $PORT"
+psql $PG_CON << EOF
+$UPDATE
+EOF
+
 else
 	echo "File $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
 fi;
