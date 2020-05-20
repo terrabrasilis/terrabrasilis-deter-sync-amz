@@ -27,6 +27,14 @@ After calls of each biome, the generateSHP.sh is called for export the main tabl
   - http_status_code_test.sh
   - generateJSON.sh
   - generateSHP.sh
+  - generateTerramaSHP.sh (NEW)
+
+### Additional task of TerraMA MT
+
+To generate the shapefile for the entire state of MT, we need to gather data from the Amazon and Cerrado project.
+This solution uses database objects as part of the data selection task and a script, generateTerramaSHP.sh to generate the shapefile and upload it to FTP.
+
+To know the database objects, access the database server and consult the "deter_terrama_mt" database, especially the "public.deter_mt", "jobs.deter_amz_online" and "jobs.deter_cerrado_online" views and the control table " public.last_release_mt ". All of these objects are used together with script logic.
 
 ## Base configuration
 
