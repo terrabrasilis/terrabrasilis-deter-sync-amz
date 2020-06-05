@@ -1,0 +1,10 @@
+Este arquivo shapefile é destinado os orgãos de fiscalização e controle que possuem
+acesso especial aos dados do sistema de monitoramento do desmatamento em tempo real, DETER.
+
+Neste contexto, os dados deste arquivo não são filtrados e podem apresentar diferenças
+de área e quantidade de geometrias quando comparados aos dados apresentados no painel de
+análise online, dashboard DETER, que possue finalidade informativa.
+
+Sobre os dados online apresentados no dashboard DETER, é aplicado um filtro de 0,0625 km²
+ao campo de área "AREATOTKM" para equalizar os valores de área e permitir a comparação de
+tendencia do desmatamento com os dados do sistema PRODES.
