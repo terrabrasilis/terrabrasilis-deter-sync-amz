@@ -19,25 +19,38 @@ esac
 
 if [ "$succeeded" -eq "1" ];
 then
-    
+   export SCRIPTS_BASE_PATH=`pwd`
    export PROJECT_NAME=deter-amz
+   # generate public JSON files
+   export IS_PUBLIC_DATA=true
    /usr/local/scripts-shell/generateJSON.sh daily_d
    /usr/local/scripts-shell/generateJSON.sh month_d
+   # generate private JSON files
+   export IS_PUBLIC_DATA=false
    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
    /usr/local/scripts-shell/generateJSON.sh month_auth_d
+   # generate shapefiles
    /usr/local/scripts-shell/generateSHP.sh
    /usr/local/scripts-shell/copyDegradations.sh
 
    export PROJECT_NAME=deter-cerrado
+   # generate public JSON files
+   export IS_PUBLIC_DATA=true
    /usr/local/scripts-shell/generateJSON.sh daily_d
    /usr/local/scripts-shell/generateJSON.sh month_d
+   # generate private JSON files
+   export IS_PUBLIC_DATA=false
    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
    /usr/local/scripts-shell/generateJSON.sh month_auth_d
+   # generate shapefiles
    /usr/local/scripts-shell/generateSHP.sh
 
    export PROJECT_NAME=deter-fm
+   # generate private JSON files
+   export IS_PUBLIC_DATA=false
    /usr/local/scripts-shell/generateJSON.sh daily_auth_d
    /usr/local/scripts-shell/generateJSON.sh month_auth_d
+   # generate shapefiles
    /usr/local/scripts-shell/generateSHP.sh
 
    export PROJECT_NAME=deter-terrama-mt
