@@ -25,5 +25,5 @@ then
   # remove last char from file
   truncate -s-1 $TARGET_FILE
   # put the updated_date attribute and reference value
-  echo ",\"update_date\":\"$UPDATED_DATE\"}" >> $TARGET_FILE
+  echo ",\"updated_date\":\"$UPDATED_DATE\"}" >> $TARGET_FILE
 fi;
