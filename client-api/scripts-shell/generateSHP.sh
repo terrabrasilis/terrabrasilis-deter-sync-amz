@@ -44,7 +44,7 @@ else
 	else
 		# The warning file is found on the external volume where the generated files are being placed.
 		WARNING_FILE="warning_about_area.txt"
-		if [ ! -f $WARNING_FILE ] ;
+		if [ ! -f $WORKSPACE_DIR/$WARNING_FILE ] ;
 		then
 			cp -a "$SCRIPTS_BASE_PATH/$WARNING_FILE" "$WORKSPACE_DIR/$WARNING_FILE"
 		fi;
