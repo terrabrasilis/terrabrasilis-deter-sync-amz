@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Here, we read and test the mandatory argument.
 TARGET_FILE=""
