@@ -58,7 +58,7 @@ then
 		mv $TARGET_DIR/$LAYER_NAME-new.json $TARGET_DIR/$LAYER_NAME.json
 		echo $DATE" - The file "$LAYER_NAME-old.json" was removed and the new file "$LAYER_NAME" was created." >> $LOG
 		# Insert the updated_date into JSON as attribute into JSON
-		/usr/local/scripts-shell/updateDate.sh "$TARGET_DIR/$LAYER_NAME"
+		/usr/local/scripts-shell/updateDate.sh "$TARGET_DIR/$LAYER_NAME.json"
 	else
 		rm $TARGET_DIR/$LAYER_NAME-new.json
 		mv $TARGET_DIR/$LAYER_NAME-old.json $TARGET_DIR/$LAYER_NAME.json
