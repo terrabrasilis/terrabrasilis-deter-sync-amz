@@ -19,7 +19,7 @@ esac
 
 if [ "$succeeded" -eq "1" ];
 then
-   export SCRIPTS_BASE_PATH=`pwd`
+   export SCRIPTS_BASE_PATH='/usr/local/scripts-shell'
    export PROJECT_NAME=deter-amz
    # generate public JSON files
    export IS_PUBLIC_DATA=true
