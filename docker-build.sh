@@ -15,23 +15,27 @@ VERSION=$(cat PROJECT_VERSION | grep -oP '(?<="version": ")[^"]*')
 
 cd client-api/
 
-# build all images
-echo 
-echo "/######################################################################/"
-echo " Build new image terrabrasilis/deter-generate-files:v$VERSION "
-echo "/######################################################################/"
-echo
+echo "Do you want to build image of terrabrasilis/deter-generate-files? Type yes to confirm or anything else." ; read BUILD_IMG1
+if [[ "$BUILD_IMG1" = "yes" ]]; then
+    echo 
+    echo "/######################################################################/"
+    echo " Build new image terrabrasilis/deter-generate-files:v$VERSION "
+    echo "/######################################################################/"
+    echo
 
-docker build $NO_CACHE -t "terrabrasilis/deter-generate-files:v$VERSION" --build-arg VERSION="v$VERSION" -f env-scripts/Dockerfile .
+    docker build $NO_CACHE -t "terrabrasilis/deter-generate-files:v$VERSION" --build-arg VERSION="v$VERSION" -f env-scripts/Dockerfile .
+fi
 
-echo 
-echo "/######################################################################/"
-echo " Build new image terrabrasilis/deter-amz-sync-client:v$VERSION "
-echo "/######################################################################/"
-echo
+echo "Do you want to build image of terrabrasilis/deter-amz-sync-client? Type yes to confirm or anything else." ; read BUILD_IMG2
+if [[ "$BUILD_IMG2" = "yes" ]]; then
+    echo 
+    echo "/######################################################################/"
+    echo " Build new image terrabrasilis/deter-amz-sync-client:v$VERSION "
+    echo "/######################################################################/"
+    echo
 
-docker build $NO_CACHE -t "terrabrasilis/deter-amz-sync-client:v$VERSION" --build-arg VERSION="v$VERSION" -f env-php/Dockerfile .
-
+    docker build $NO_CACHE -t "terrabrasilis/deter-amz-sync-client:v$VERSION" --build-arg VERSION="v$VERSION" -f env-php/Dockerfile .
+fi
 # send to dockerhub
 echo 
 echo "The building was finished! Do you want sending these new images to Docker HUB? Type yes to continue." ; read SEND_TO_HUB
@@ -39,6 +43,10 @@ if [[ ! "$SEND_TO_HUB" = "yes" ]]; then
     echo "Ok, not send the images."
 else
     echo "Nice, sending the images!"
-    docker push "terrabrasilis/deter-generate-files:v$VERSION"
-    docker push "terrabrasilis/deter-amz-sync-client:v$VERSION"
+    if [[ "$BUILD_IMG1" = "yes" ]]; then
+        docker push "terrabrasilis/deter-generate-files:v$VERSION"
+    fi
+    if [[ "$BUILD_IMG2" = "yes" ]]; then
+        docker push "terrabrasilis/deter-amz-sync-client:v$VERSION"
+    fi
 fi
