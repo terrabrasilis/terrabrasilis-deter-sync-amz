@@ -23,7 +23,8 @@ then
 	QUERY="SELECT $OUTPUT_COLUMNS FROM public.deter_mt as tb1 WHERE tb1.areatotalkm >= "
 fi;
 
-# target dir for generated files
+# STATIC_FILES_DIR comes from /etc/environments, recorded by Dockerfile during compilation time
+# Defines the destination directory of the generated files
 TARGET_DIR=$STATIC_FILES_DIR
 # work dir
 WORKSPACE_DIR=/shapefiles/$PROJECT_NAME
@@ -51,14 +52,16 @@ then
 	#curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
 
 # update the date of last data for keep controller 
-UPDATE="UPDATE public.last_release_mt SET amz_release_date=(SELECT MAX(view_date) FROM public.deter_mt WHERE source='deter_amz');"
+SEL_DATE="SELECT MAX(date_audit) FROM jobs.deter_amz_online WHERE uf='MT'"
+UPDATE="UPDATE public.last_release_mt SET amz_release_date=($SEL_DATE);"
 
 PG_CON="-d $DB -h $HOST -p $PORT"
 psql $PG_CON << EOF
 $UPDATE
 EOF
 
-UPDATE="UPDATE public.last_release_mt SET cerrado_release_date=(SELECT MAX(view_date) FROM public.deter_mt WHERE source='deter_cerrado');"
+SEL_DATE="SELECT MAX(created_date) FROM jobs.deter_cerrado_online WHERE uf='MT'"
+UPDATE="UPDATE public.last_release_mt SET cerrado_release_date=($SEL_DATE);"
 
 PG_CON="-d $DB -h $HOST -p $PORT"
 psql $PG_CON << EOF
