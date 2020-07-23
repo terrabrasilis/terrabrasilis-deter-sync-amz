@@ -81,7 +81,7 @@ class PostgreSQLService {
 		}
 		
 		if( !$this->tableExists($tableName, $error) ) {
-			$error = "Log table doesn't exist.";
+			$error = "The table ".$tableName." doesn't exist.";
 			return false;
 		}
 
