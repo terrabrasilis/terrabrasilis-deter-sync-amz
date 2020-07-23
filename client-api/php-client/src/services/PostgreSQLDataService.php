@@ -233,7 +233,7 @@ class PostgreSQLDataService extends PostgreSQLService {
 		return $this->execSQL($tableName, DeterbTableStore::getSQL2ReadMaxAuditDateFromData(), $error);
 	}
 
-		/**
+	/**
 	 * Read the max value to field image date.
 	 *
 	 * @param string $error, allow read the error message.
@@ -251,6 +251,24 @@ class PostgreSQLDataService extends PostgreSQLService {
 		return $this->execSQL($tableName, DeterbTableStore::getSQL2ReadMaxDateFromData(), $error);
 	}
 	
+	/**
+	 * Read the last PRODES reference date value.
+	 *
+	 * @param string $error, allow read the error message.
+	 * @return boolean, The max image date on success or false otherwise.
+	 */
+	public function readLastProdesDate(&$error) {
+		$config = ServiceConfiguration::defines();
+	
+		if( empty ( $config ) ) {
+			$error = "Missing the metadata tables configuration.";
+			return false;
+		}
+	
+		$tableName = $config["CONFIG_TABLE"];
+		return $this->execSQL($tableName, DeterbTableStore::getSQL2ReadPRODESLastDate(), $error);
+	}
+
 	/**
 	 * WARNING: THIS METHOD ARE USED ON ANOTHER CENARIUS WHEN SERVICE RESPONSES IN JSON FORMAT.
 	 * Insert data into PostgreSQL table.

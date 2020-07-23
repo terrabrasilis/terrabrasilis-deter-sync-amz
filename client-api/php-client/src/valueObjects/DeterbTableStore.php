@@ -174,4 +174,15 @@ class DeterbTableStore {
 		
 		return $sql;
 	}
+
+	/**
+	 * Makes a SQL script to read the PRODES reference date from config table.
+	 * @return <boolean, string>, The SQL script to read value or false otherwise.
+	 */
+	public static function getSQL2ReadPRODESLastDate() {
+		$config = ServiceConfiguration::defines();
+		$sql="SELECT end_date FROM " . $config["CONFIG_TABLE"];
+		
+		return $sql;
+	}
 }

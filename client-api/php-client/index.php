@@ -23,6 +23,12 @@ $log = new GeneralLog();// to write more detailed log in file.
 $pgDataService = new PostgreSQLDataService();
 $pgLogService = new PostgreSQLLogService();
 
+/*
+A text file to store the last PRODES reference date read in the configuration table.
+It is used if the reading fails in the configuration table.
+*/
+$fileWithLastValidDate=__DIR__."/rawData/lastprodesdate";
+
 if(get_class($log)!=='DAO\\GeneralLog') {
 	// disable logs in file
 	$log=false;
@@ -44,19 +50,20 @@ $error = "";// Used to get the error description from PostgreSQLService methods 
 
 $RAWFILE = "";// The directory path and filename to write the raw data during download.
 
-// Read the last auditing date from output table 
-// $last_date = $pgDataService->readMaxAuditDate($error);
+// Read the end_date of the PRODES reference date from config table
+// Used to renew all data into current table
+$last_date = $pgDataService->readLastProdesDate($error);
 
-// if($last_date===false || count($last_date)!=1) {
-// 	// table not found or database is off
-// 	if($log) $log->writeErrorLog($error);
-// 	$last_date = '2017-08-03';
-// }else{
-// 	$last_date = $last_date[0][0];
-// }
-
-// Force last date for renew work
-$last_date = '2018-07-31';/// the last PRODES year
+if($last_date===false || count($last_date)!=1) {
+	// table not found or database is off
+	if($log) $log->writeErrorLog($error);
+	// reading the file because the database failed
+	$last_date = file_get_contents($fileWithLastValidDate);
+}else{
+	$last_date = $last_date[0][0];
+	// writing to the file for use when loading is failed
+	file_put_contents($fileWithLastValidDate, $last_date);
+}
 
 $syncService = new HTTPSyncService();
 $RAWFILE = $syncService->downloadLastGeometries($last_date);
