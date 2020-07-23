@@ -29,6 +29,8 @@ TARGET_DIR=$STATIC_FILES_DIR
 # work dir
 WORKSPACE_DIR=/shapefiles/$PROJECT_NAME
 
+LOGFILE="terrama_ftp_push.log"
+
 if [ ! -d $WORKSPACE_DIR ];
 then
 	mkdir -p $WORKSPACE_DIR
@@ -48,8 +50,8 @@ then
 	zip "$OUTPUT_FILE_NAME.zip" "$OUTPUT_FILE_NAME.shp" "$OUTPUT_FILE_NAME.shx" "$OUTPUT_FILE_NAME.prj" "$OUTPUT_FILE_NAME.dbf"
 
 	# upload file to FTP
-	curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.zip" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
-	#curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+	curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.zip" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/$LOGFILE"
+	#curl -v --user "$FTP_USER:$FTP_PASS" --upload-file "$TARGET_DIR/$OUTPUT_FILE_NAME.{dbf,shp,shx,prj}" ftp://ftp.dgi.inpe.br/terrama2q/dtr_mt/ 2>&1 | tee -a "$TARGET_DIR/$LOGFILE"
 
 # update the date of last data for keep controller 
 SEL_DATE="SELECT MAX(date_audit) FROM jobs.deter_amz_online WHERE uf='MT'"
@@ -69,7 +71,7 @@ $UPDATE
 EOF
 
 else
-	echo "File $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/transfer_curl.log"
+	echo "File $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/$LOGFILE"
 fi;
 
 # remove files after transfer
