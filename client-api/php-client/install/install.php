@@ -51,7 +51,7 @@ $configTemplate = "<?php\n".
 "				'SRID' => 4674,// (SIRGAS 2000)\n".
 "				'SCHEMA' => 'terrabrasilis',\n".
 "				'DATA_TABLE' => 'deter_table',\n".
-"				'CONFIG_TABLE' => 'prodes_reference',\n".
+"				'CONFIG_TABLE' => 'public.prodes_reference',\n".
 "				'LOG_TABLE' => 'deterb_sync_log'\n".
 "		);\n".
 "		return \$config;\n".
