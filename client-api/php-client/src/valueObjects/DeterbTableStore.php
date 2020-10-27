@@ -69,6 +69,7 @@ class DeterbTableStore {
 		"areamunkm double precision, ".
 		"areauckm double precision, ".
 		"county character varying(254), ".
+		"geocod character varying(7), ".
 		"uf character varying(2), ".
 		"uc character varying(254), ".
 		"geom geometry, ".
