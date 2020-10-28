@@ -29,7 +29,8 @@ TARGET_DIR=$STATIC_FILES_DIR
 # work dir
 WORKSPACE_DIR=/shapefiles/$PROJECT_NAME
 
-LOGFILE="terrama_ftp_push.log"
+DATE_LOG=$(date +%Y-%m-%d)
+LOGFILE="terrama_ftp_push_$DATE_LOG.log"
 
 if [ ! -d $WORKSPACE_DIR ];
 then
@@ -71,8 +72,10 @@ $UPDATE
 EOF
 
 else
-	echo "File $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/$LOGFILE"
+	echo "The file $OUTPUT_FILE_NAME not found." 2>&1 | tee -a "$TARGET_DIR/$LOGFILE"
 fi;
 
 # remove files after transfer
 rm $TARGET_DIR/$OUTPUT_FILE_NAME.*
+
+. ./send-mail.sh

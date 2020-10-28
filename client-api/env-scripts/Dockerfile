@@ -28,7 +28,8 @@ RUN apt-get -o Acquire::ForceIPv4=true update \
     tzdata \
     bash \
     curl \
-    zip
+    zip \
+    ssmtp
 
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" > /etc/apt/sources.list.d/pgdg.list
