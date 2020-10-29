@@ -6,6 +6,8 @@ failed=0
 url="$GEOSERVER_BASE_URL/$GEOSERVER_BASE_PATH"
 status="200"
 
+export SCRIPTS_BASE_PATH='/usr/local/scripts-shell'
+
 $SCRIPTS_BASE_PATH/http_status_code_test.sh $url --status $status --debug
 
 case $? in
@@ -19,7 +21,6 @@ esac
 
 if [ "$succeeded" -eq "1" ];
 then
-   export SCRIPTS_BASE_PATH='/usr/local/scripts-shell'
    export PROJECT_NAME=deter-amz
    # generate public JSON files
    export IS_PUBLIC_DATA=true
