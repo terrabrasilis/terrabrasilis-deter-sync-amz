@@ -78,4 +78,5 @@ fi;
 # remove files after transfer
 rm $TARGET_DIR/$OUTPUT_FILE_NAME.*
 
+cd $SCRIPTS_BASE_PATH
 . ./send-mail.sh
