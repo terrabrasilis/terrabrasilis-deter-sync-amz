@@ -3,7 +3,7 @@
 succeeded=0
 failed=0
 
-url="$GEOSERVER_BASE_URL/$GEOSERVER_BASE_PATH"
+url="$GEOSERVER_BASE_URL/$GEOSERVER_BASE_PATH/ows"
 status="200"
 
 export SCRIPTS_BASE_PATH='/usr/local/scripts-shell'

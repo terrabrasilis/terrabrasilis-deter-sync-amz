@@ -43,9 +43,9 @@ then
 fi;
 
 # After that, we request the new data in JSON format and putting it in a new file.
-curl $AUTH $GEOSERVER_BASE_URL'/'$GEOSERVER_BASE_PATH'?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAME='$PROJECT_NAME'%3A'$LAYER_NAME'&OUTPUTFORMAT=application%2Fjson' \
+curl $AUTH $GEOSERVER_BASE_URL'/'$GEOSERVER_BASE_PATH'/'$PROJECT_NAME'/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAME='$LAYER_NAME'&OUTPUTFORMAT=application%2Fjson' \
 -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4' \
--H 'User-Agent: ShellScript(generateJSON 0.7)' \
+-H 'User-Agent: ShellScript(generateJSON 1.7.0)' \
 -H 'Accept: */*' -H 'Referer: '$GEOSERVER_BASE_URL'/' -H 'X-Requested-With: curl' \
 --compressed >> $TARGET_DIR/$LAYER_NAME-new.json
 
