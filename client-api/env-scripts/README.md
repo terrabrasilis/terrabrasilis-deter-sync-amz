@@ -41,7 +41,7 @@ To know the database objects, access the database server and consult the "deter_
 The allow configuration is:
 - the hour for the cron job (use the daily.cron file)*;
 - the day of week for the cron job (use the weekly.cron file)*;
-- the URL location for geoserver (use the GEOSERVER_BASE_URL="http://terrabrasilis.dpi.inpe.br" and GEOSERVER_BASE_PATH="geoserver/ows" only in Dockerfile)*;
+- the URL location for geoserver (use the GEOSERVER_BASE_URL="http://terrabrasilis.dpi.inpe.br" and GEOSERVER_BASE_PATH="geoserver" only in Dockerfile)*;
 - the host name for postgres server (use the POSTGRES_HOST="the_ip_or_name_for_host" only in Dockerfile)*;
 - the user and password for access the controlled geoserver layers (use Docker Secrets as below);
 - the user and password for access the SGDB postgres (use Docker Secrets as below);
