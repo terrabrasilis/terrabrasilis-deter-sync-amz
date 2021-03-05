@@ -40,22 +40,25 @@ then
    export PROJECT_NAME=deter-cerrado
    # generate public JSON files
    export IS_PUBLIC_DATA=true
+   $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_d
    $SCRIPTS_BASE_PATH/generateJSON.sh daily_d
    $SCRIPTS_BASE_PATH/generateJSON.sh month_d
+   $SCRIPTS_BASE_PATH/generateJSON.sh cloud_m_d
    # generate private JSON files
    export IS_PUBLIC_DATA=false
+   $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_auth_d
    $SCRIPTS_BASE_PATH/generateJSON.sh daily_auth_d
    $SCRIPTS_BASE_PATH/generateJSON.sh month_auth_d
    # generate shapefiles
    $SCRIPTS_BASE_PATH/generateSHP.sh
 
-   export PROJECT_NAME=deter-fm
-   # generate private JSON files
-   export IS_PUBLIC_DATA=false
-   $SCRIPTS_BASE_PATH/generateJSON.sh daily_auth_d
-   $SCRIPTS_BASE_PATH/generateJSON.sh month_auth_d
-   # generate shapefiles
-   $SCRIPTS_BASE_PATH/generateSHP.sh
+   # export PROJECT_NAME=deter-fm
+   # # generate private JSON files
+   # export IS_PUBLIC_DATA=false
+   # $SCRIPTS_BASE_PATH/generateJSON.sh daily_auth_d
+   # $SCRIPTS_BASE_PATH/generateJSON.sh month_auth_d
+   # # generate shapefiles
+   # $SCRIPTS_BASE_PATH/generateSHP.sh
 
    export PROJECT_NAME=deter-terrama-mt
    $SCRIPTS_BASE_PATH/generateTerramaSHP.sh
