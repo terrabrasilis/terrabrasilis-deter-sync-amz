@@ -52,13 +52,11 @@ then
    # generate shapefiles
    $SCRIPTS_BASE_PATH/generateSHP.sh
 
-   # export PROJECT_NAME=deter-fm
-   # # generate private JSON files
-   # export IS_PUBLIC_DATA=false
-   # $SCRIPTS_BASE_PATH/generateJSON.sh daily_auth_d
-   # $SCRIPTS_BASE_PATH/generateJSON.sh month_auth_d
-   # # generate shapefiles
-   # $SCRIPTS_BASE_PATH/generateSHP.sh
+   export PROJECT_NAME=deter-fires
+   # generate public JSON files
+   export IS_PUBLIC_DATA=true
+   $SCRIPTS_BASE_PATH/generateJSON.sh fof_prodes_d
+   $SCRIPTS_BASE_PATH/generateJSON.sh fof_car_d
 
    export PROJECT_NAME=deter-terrama-mt
    $SCRIPTS_BASE_PATH/generateTerramaSHP.sh
