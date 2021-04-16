@@ -1,4 +1,4 @@
 # m h  dom mon dow   command
 # used to change the date for data release, every Friday
 # numbers to define the day of week (0 and 7 is Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday e 6=Saturday)
-00 07 * * 5 /bin/bash /usr/local/exec_weekly.sh >> /logs/exec_weekly.log 2>&1
+30 05 * * 5 /bin/bash /usr/local/exec_weekly.sh >> /logs/exec_weekly.log 2>&1

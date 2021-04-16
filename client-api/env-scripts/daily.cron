@@ -1,3 +1,3 @@
 # m h  dom mon dow   command
 # used to generate files as JSONs and Shapefiles every days
-45 08 * * * /bin/bash /usr/local/exec_daily.sh >> /logs/exec_daily.log 2>&1
+00 06 * * * /bin/bash /usr/local/exec_daily.sh >> /logs/exec_daily.log 2>&1
