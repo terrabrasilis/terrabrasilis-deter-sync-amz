@@ -10,7 +10,7 @@ PASS=$POSTGRES_PASS
 
 DB="DETER-B"
 
-LIST_COLUMNS="origin_gid, uuid, classname, quadrant, orbitpoint, date, date_audit, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county, uf, uc, geom, publish_month"
+LIST_COLUMNS="origin_gid, classname, quadrant, orbitpoint, date, date_audit, lot, sensor, satellite, areatotalkm, areamunkm, areauckm, county, uf, uc, geom, publish_month"
 
 INSERT="INSERT INTO terrabrasilis.degradations($LIST_COLUMNS) SELECT $LIST_COLUMNS FROM terrabrasilis.deter_table WHERE classname in ('DEGRADACAO','CS_DESORDENADO','CS_GEOMETRICO','CICATRIZ_DE_QUEIMADA') AND date_audit > (SELECT MAX(date_audit) FROM terrabrasilis.degradations)"
 export PGPASSWORD=$PASS
