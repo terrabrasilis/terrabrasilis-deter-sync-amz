@@ -52,7 +52,7 @@ then
    # generate shapefiles
    $SCRIPTS_BASE_PATH/generateSHP.sh
 
-   export PROJECT_NAME=deter-fires
+   export PROJECT_NAME=dashboard-fires
    # generate public JSON files
    export IS_PUBLIC_DATA=true
    $SCRIPTS_BASE_PATH/generateJSON.sh fof_prodes_d
