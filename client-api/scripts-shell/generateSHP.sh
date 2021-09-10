@@ -59,12 +59,13 @@ else
 
 	FILTER_PUBLIC="0.0625"
 	FILTER_AUTH="0.01"
-	QUERY_FILTER_AUTH="uf != ('MS') AND view_date > (SELECT end_date FROM public.prodes_reference) AND tb1.areatotalkm >= "
+	QUERY_FILTER_AUTH="uf != ('MS') AND tb1.areatotalkm >= "
 	QUERY_FILTER_PUBLIC="view_date <= (SELECT date FROM public.deter_publish_date) AND ${QUERY_FILTER_AUTH}"
 
 	QUERY="(SELECT gid||'_curr' as gid, classname, "
 	QUERY="${QUERY}quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, "
 	QUERY="${QUERY}areauckm, county as municipality, uf, uc, geom FROM deter_table "
+	QUERY="${QUERY}WHERE date > (SELECT end_date FROM public.prodes_reference) "
 	QUERY="${QUERY}UNION "
 	QUERY="${QUERY}SELECT gid||'_hist', classname, "
 	QUERY="${QUERY}quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, "
