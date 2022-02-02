@@ -35,7 +35,7 @@ then
    $SCRIPTS_BASE_PATH/generateSHP.sh
    $SCRIPTS_BASE_PATH/copyDegradations.sh
 
-   export PROJECT_NAME=deter-cerrado
+   export PROJECT_NAME=deter-cerrado-nb
    # generate public JSON files
    export IS_PUBLIC_DATA=true
    $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_d
