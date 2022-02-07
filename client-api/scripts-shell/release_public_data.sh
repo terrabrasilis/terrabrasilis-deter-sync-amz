@@ -3,7 +3,7 @@
 # To block the release task, change manually the blocked field in public.deter_publish_date.
 
 # Import functions ===========================================
-. ./functions.lib.sh
+. ${SCRIPTS_BASE_PATH}/functions.lib.sh
 # ============================================================
 
 # get global env vars from Docker Secrets
