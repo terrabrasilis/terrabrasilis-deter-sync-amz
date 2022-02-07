@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Import functions ===========================================
+. ./functions.lib.sh
+# ============================================================
+
 # get global env vars from Docker Secrets
 export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 export POSTGRES_PASS=$(cat "$POSTGRES_PASS_FILE")
@@ -23,9 +28,9 @@ WARNING_FILE=""
 OUTPUT_COLUMNS="tb1.gid, tb1.classname, tb1.quadrant, tb1.path_row, tb1.view_date, tb1.sensor, tb1.satellite, tb1.areauckm, tb1.uc, tb1.areamunkm, tb1.municipality, tb1.uf, tb1.geom"
 
 
-if [ "$PROJECT_NAME" == "deter-cerrado" ];
+if [ "$PROJECT_NAME" == "deter-cerrado-nb" ];
 then
-  DB="deter_cerrado"
+  DB=$(getDBName $PROJECT_NAME)
 
 	FILTER_PUBLIC="0.03"
 	FILTER_AUTH="0.01"
@@ -55,7 +60,7 @@ else
 		cp -a "$SCRIPTS_BASE_PATH/$WARNING_FILE" "$WORKSPACE_DIR/$WARNING_FILE"
 	fi;
 
-	DB="DETER-B"
+	DB=$(getDBName $PROJECT_NAME)
 
 	FILTER_PUBLIC="0.0625"
 	FILTER_AUTH="0.01"
