@@ -6,8 +6,6 @@ failed=0
 url="$GEOSERVER_BASE_URL/$GEOSERVER_BASE_PATH/ows"
 status="200"
 
-export SCRIPTS_BASE_PATH='/usr/local/scripts-shell'
-
 $SCRIPTS_BASE_PATH/http_status_code_test.sh $url --status $status --debug
 
 case $? in

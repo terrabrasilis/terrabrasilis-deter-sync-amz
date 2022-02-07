@@ -61,7 +61,8 @@ RUN echo "export GEOSERVER_BASE_URL=\"http://terrabrasilis.dpi.inpe.br\"" >> /et
     && echo "export FTP_USER_FILE=\"/run/secrets/ftp.user.queimadas\"" >> /etc/environment \
     && echo "export FTP_PASS_FILE=\"/run/secrets/ftp.pass.queimadas\"" >> /etc/environment \
     && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment \
-    && echo "export STATIC_FILES_DIR=\"/data/terrama/deter-amz\"" >> /etc/environment
+    && echo "export STATIC_FILES_DIR=\"/data/terrama/deter-amz\"" >> /etc/environment \
+    && echo "export SCRIPTS_BASE_PATH=\"${INSTALL_PATH}/scripts-shell\"" >> /etc/environment
 
 # INSTALL SCRIPTS
 # ------------------------------------------------------
