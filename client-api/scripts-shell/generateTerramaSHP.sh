@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Import functions ===========================================
+. ./functions.lib.sh
+# ============================================================
+
 # get global env vars from Docker Secrets
 export PGUSER=$(cat "$POSTGRES_USER_FILE")
 export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
@@ -18,7 +23,7 @@ OUTPUT_COLUMNS="tb1.gid, tb1.classname, tb1.quadrant, tb1.path_row, tb1.view_dat
 
 if [ "$PROJECT_NAME" == "deter-terrama-mt" ];
 then
-	DB="deter_terrama_mt"
+	DB=$(getDBName $PROJECT_NAME)
 	FILTER_ALL="0.01"
 	QUERY="SELECT $OUTPUT_COLUMNS FROM public.deter_mt as tb1 WHERE tb1.areatotalkm >= "
 fi;
