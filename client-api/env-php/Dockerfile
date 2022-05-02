@@ -8,12 +8,8 @@
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 FROM php:5.6-cli
 
-ARG VERSION=x.y
-ENV VERSION=$VERSION
-
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="client-api" \
-version=${VERSION} \
 author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="API's client to sync database between INPE/CRA and INPE/SJC of the DETERB project of the Amazon."
