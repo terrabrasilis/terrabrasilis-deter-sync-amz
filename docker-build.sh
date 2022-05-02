@@ -23,7 +23,7 @@ if [[ "$BUILD_IMG1" = "yes" ]]; then
     echo "/######################################################################/"
     echo
 
-    docker build $NO_CACHE -t "terrabrasilis/deter-generate-files:$VERSION" --build-arg VERSION="$VERSION" -f env-scripts/Dockerfile .
+    docker build $NO_CACHE -t "terrabrasilis/deter-generate-files:$VERSION" -f env-scripts/Dockerfile .
 fi
 
 echo "Do you want to build image of terrabrasilis/deter-amz-sync-client? Type yes to confirm or anything else." ; read BUILD_IMG2
@@ -34,7 +34,7 @@ if [[ "$BUILD_IMG2" = "yes" ]]; then
     echo "/######################################################################/"
     echo
 
-    docker build $NO_CACHE -t "terrabrasilis/deter-amz-sync-client:$VERSION" --build-arg VERSION="$VERSION" -f env-php/Dockerfile .
+    docker build $NO_CACHE -t "terrabrasilis/deter-amz-sync-client:$VERSION" -f env-php/Dockerfile .
 fi
 # send to dockerhub
 echo 
