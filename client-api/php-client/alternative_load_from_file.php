@@ -47,7 +47,8 @@ if(get_class($pgLogService)!=='Services\\PostgreSQLLogService') {
 
 $error = "";// Used to get the error description from PostgreSQLService methods calls.
 
-$RAWFILE = "/usr/local/php-client/rawData/17-03-2021_portion_data.sql";// The directory path and filename to load the raw data.
+$today_date=date("d-m-Y");
+$RAWFILE = "/usr/local/php-client/rawData/".$today_date."_portion_data.sql";// The directory path and filename to load the raw data.
 
 // Read the end_date of the PRODES reference date from config table
 // Used to renew all data into current table

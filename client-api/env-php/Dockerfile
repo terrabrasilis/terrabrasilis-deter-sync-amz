@@ -39,9 +39,6 @@ RUN cd $INSTALL_PATH/php-client \
     && wget https://getcomposer.org/download/1.3.2/composer.phar \
     && php composer.phar install
 
-# install and enable cron job scripts
-ADD env-php/cron_exec.sh $INSTALL_PATH/
-RUN chmod +x $INSTALL_PATH/cron_exec.sh
 # install and enable config cron
 ADD env-php/daily.cron /etc/cron.d/daily-cron
 RUN chmod 0644 /etc/cron.d/daily-cron \

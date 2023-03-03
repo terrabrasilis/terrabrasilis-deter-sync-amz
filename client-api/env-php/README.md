@@ -1,11 +1,11 @@
 # Docker Client API - HTTP client
 
-Defines the environment to run the php client API described in [php-client README](https://github.com/Terrabrasilis/terrabrasilis-deter-sync-amz/tree/master/client-api/php-client)
+The alternative is to use the data file transferred by another shell script directly to the directory path and run the script called "alternative_load_from_file.php"
 
 ## Scripts workflow
 
 Are two entry points:
-- index.php, connects to the remote API and download all data to a SQL insert script file, access the local database and restore the data, running the downloaded script.
+- alternative_load_from_file.php, read the data from local file, access the local database and restore the data.
 - checkStatus.php, verify the state of the last execute and send mail to accounts defined by MAIL_TO in client-api-stack.yaml.
 
 ## Base configuration
