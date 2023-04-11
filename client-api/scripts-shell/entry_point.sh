@@ -25,10 +25,14 @@ then
    $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_d
    $SCRIPTS_BASE_PATH/generateJSON.sh month_d
    $SCRIPTS_BASE_PATH/generateJSON.sh cloud_m_d
+   # CSV to daily data
+   $SCRIPTS_BASE_PATH/generateCSV.sh all_daily_d
    # generate private JSON files
    export IS_PUBLIC_DATA=false
    $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_auth_d
    $SCRIPTS_BASE_PATH/generateJSON.sh month_auth_d
+   # CSV to auth daily data
+   $SCRIPTS_BASE_PATH/generateCSV.sh all_daily_auth_d
    # generate shapefiles
    $SCRIPTS_BASE_PATH/generateSHP.sh
    $SCRIPTS_BASE_PATH/copyDegradations.sh
@@ -39,10 +43,14 @@ then
    $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_d
    $SCRIPTS_BASE_PATH/generateJSON.sh month_d
    $SCRIPTS_BASE_PATH/generateJSON.sh cloud_m_d
+   # CSV to daily data
+   $SCRIPTS_BASE_PATH/generateCSV.sh all_daily_d
    # generate private JSON files
    export IS_PUBLIC_DATA=false
    $SCRIPTS_BASE_PATH/generateJSON.sh all_daily_auth_d
    $SCRIPTS_BASE_PATH/generateJSON.sh month_auth_d
+   # CSV to auth daily data
+   $SCRIPTS_BASE_PATH/generateCSV.sh all_daily_auth_d
    # generate shapefiles
    $SCRIPTS_BASE_PATH/generateSHP.sh
 
