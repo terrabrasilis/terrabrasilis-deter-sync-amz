@@ -44,23 +44,6 @@ ENV INSTALL_PATH /usr/local
 ENV SHARED_DIR /data/files
 ENV STATIC_FILES_DIR /data/terrama/deter-amz
 
-## THE ENV VARS ARE NOT READED INSIDE A SHELL SCRIPT THAT RUNS IN CRON TASKS.
-## SO, WE WRITE INSIDE THE /etc/environment FILE AND READS BEFORE RUN THE SCRIPT.
-RUN echo "export GEOSERVER_BASE_URL=\"http://terrabrasilis.dpi.inpe.br\"" >> /etc/environment \
-    && echo "export GEOSERVER_BASE_PATH=\"geoserver\"" >> /etc/environment \
-    && echo "export POSTGRES_HOST=\"150.163.2.177\"" >> /etc/environment \
-    && echo "export POSTGRES_PORT=\"5432\"" >> /etc/environment \
-    && echo "export POSTGRES_USER_FILE=\"/run/secrets/postgres.user.geoserver\"" >> /etc/environment \
-    && echo "export POSTGRES_PASS_FILE=\"/run/secrets/postgres.pass.geoserver\"" >> /etc/environment \
-    && echo "export POSTGRES_PROD_USER_FILE=\"/run/secrets/postgres.user.prod\"" >> /etc/environment \
-    && echo "export POSTGRES_PROD_PASS_FILE=\"/run/secrets/postgres.pass.prod\"" >> /etc/environment \
-    && echo "export GEOSERVER_USER_FILE=\"/run/secrets/geoserver.user.dashboard\"" >> /etc/environment \
-    && echo "export GEOSERVER_PASS_FILE=\"/run/secrets/geoserver.pass.dashboard\"" >> /etc/environment \
-    && echo "export FTP_USER_FILE=\"/run/secrets/ftp.user.queimadas\"" >> /etc/environment \
-    && echo "export FTP_PASS_FILE=\"/run/secrets/ftp.pass.queimadas\"" >> /etc/environment \
-    && echo "export SHARED_DIR=\"/data/files\"" >> /etc/environment \
-    && echo "export STATIC_FILES_DIR=\"/data/terrama/deter-amz\"" >> /etc/environment \
-    && echo "export SCRIPTS_BASE_PATH=\"${INSTALL_PATH}/scripts-shell\"" >> /etc/environment
 
 # INSTALL SCRIPTS
 # ------------------------------------------------------
