@@ -1,4 +1,9 @@
-!/bin/bash
+#!/bin/bash
+
+# Import functions ===========================================
+. ${SCRIPTS_BASE_PATH}/functions.lib.sh
+# ============================================================
+
 # Prepare data on production database
 #
 # get audited cells/tasks/scenes using the task status, cell status and audit phase
