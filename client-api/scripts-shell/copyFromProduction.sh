@@ -31,6 +31,7 @@ WITH="${WITH}	AND cl.finalized "
 WITH="${WITH}	GROUP BY 1,2,3,4,5 "
 WITH="${WITH}) "
 
+# get production database name 
 DB=$(getProductionDBName $PROJECT_NAME)
 
 # the config parameters, POSTGRES_HOST_PROD and POSTGRES_PORT_PROD, has readed from /etc/environment at start cronjob
@@ -62,6 +63,8 @@ done
 # get global env vars from Docker Secrets
 export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
+# get publish database name 
+DB=$(getDBName $PROJECT_NAME)
 
 # using SQL View through DBLink to copy new deforestation alerts (only audited data)
 COPY="INSERT INTO public.deter_current( "
