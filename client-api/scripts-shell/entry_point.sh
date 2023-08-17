@@ -52,6 +52,12 @@ then
    $SCRIPTS_BASE_PATH/generateJSON.sh fof_prodes_d
    $SCRIPTS_BASE_PATH/generateJSON.sh fof_car_d
 
-   export PROJECT_NAME=deter-terrama-mt
-   $SCRIPTS_BASE_PATH/generateTerramaSHP.sh
+   export PROJECT_NAME=deter-nf
+   $SCRIPTS_BASE_PATH/generate_shp.sh
+
+   export PROJECT_NAME=deter-pantanal
+   $SCRIPTS_BASE_PATH/generate_shp.sh
+
+   # export PROJECT_NAME=deter-terrama-mt
+   # $SCRIPTS_BASE_PATH/generateTerramaSHP.sh
 fi;
