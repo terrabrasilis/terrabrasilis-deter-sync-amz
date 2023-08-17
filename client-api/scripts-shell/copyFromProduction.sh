@@ -1,7 +1,7 @@
 !/bin/bash
 # get global env vars from Docker Secrets
-export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
-export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
+export POSTGRES_USER=$(cat "$POSTGRES_PROD_USER_FILE")
+export PGPASSWORD=$(cat "$POSTGRES_PROD_PASS_FILE")
 
 # get audited cells/tasks/scenes using the task status, cell status and audit phase
 WITH="WITH candidates AS ( "
