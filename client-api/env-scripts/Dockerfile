@@ -71,6 +71,7 @@ RUN chmod +x $INSTALL_PATH/scripts-shell/*.sh
 # install and enable cron job scripts
 ADD env-scripts/exec_daily.sh $INSTALL_PATH/
 ADD env-scripts/exec_weekly.sh $INSTALL_PATH/
+ADD env-scripts/daily_copy.sh $INSTALL_PATH/
 RUN chmod +x $INSTALL_PATH/*.sh
 # install and enable config cron
 # for daily
