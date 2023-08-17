@@ -27,8 +27,8 @@ WITH="${WITH}	GROUP BY 1,2,3,4,5 "
 WITH="${WITH}) "
 
 DB=$(getProductionDBName $PROJECT_NAME)
-# read config parameters, POSTGRES_HOST_PROD and POSTGRES_PORT_PROD, for production databases
-source "${SHARED_DIR}/pgconfig_production"
+
+# the config parameters, POSTGRES_HOST_PROD and POSTGRES_PORT_PROD, has readed from /etc/environment at start cronjob
 # get global env vars from Docker Secrets
 export POSTGRES_USER=$(cat "$POSTGRES_PROD_USER_FILE")
 export PGPASSWORD=$(cat "$POSTGRES_PROD_PASS_FILE")
