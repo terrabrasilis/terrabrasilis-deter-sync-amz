@@ -1,8 +1,6 @@
 !/bin/bash
-# get global env vars from Docker Secrets
-export POSTGRES_USER=$(cat "$POSTGRES_PROD_USER_FILE")
-export PGPASSWORD=$(cat "$POSTGRES_PROD_PASS_FILE")
-
+# Prepare data on production database
+#
 # get audited cells/tasks/scenes using the task status, cell status and audit phase
 WITH="WITH candidates AS ( "
 WITH="${WITH}	SELECT scene.id as scene_id, cl.cell_id, task.id as task_id, scene.view_date, split_part(upper(cat.name::text), '_'::text, 2) AS satelite, MAX(tl.final_time) as task_date "
@@ -29,8 +27,11 @@ WITH="${WITH}	GROUP BY 1,2,3,4,5 "
 WITH="${WITH}) "
 
 DB=$(getProductionDBName $PROJECT_NAME)
-# read config parameters, host and port, for production database
-source "${SHARED_DIR}/pgconfig_prod_${PROJECT_NAME}"
+# read config parameters, POSTGRES_HOST_PROD and POSTGRES_PORT_PROD, for production databases
+source "${SHARED_DIR}/pgconfig_production"
+# get global env vars from Docker Secrets
+export POSTGRES_USER=$(cat "$POSTGRES_PROD_USER_FILE")
+export PGPASSWORD=$(cat "$POSTGRES_PROD_PASS_FILE")
 
 PRODUCTION_TABLES=("transitorias" "finais_sob_transitorias" "finais")
 for TABLE in ${PRODUCTION_TABLES[@]}
@@ -51,30 +52,36 @@ do
     psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${SET_AUDIT_DATE}"
 done
 
+# Copy data from production database to publish database
+#
+# get global env vars from Docker Secrets
+export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
+export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
+
 # using SQL View through DBLink to copy new deforestation alerts (only audited data)
 COPY="INSERT INTO public.deter_current( "
 COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, uuid) "
 COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, uuid "
 COPY="${COPY} FROM public.deter_prod_def_current WHERE audit_date IS NOT NULL AND created_date::date>(SELECT MAX(create_date) FROM public.deter_current);"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${COPY}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
 # using SQL View through DBLink to remove degradation alerts
 DEL="DELETE FROM public.deter_current WHERE class_name='cicatriz de queimada';"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${DEL}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${DEL}"
 
 # using SQL View through DBLink to copy degradation alerts (only audited data)
 COPY="INSERT INTO public.deter_current( "
 COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, uuid) "
 COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, uuid "
 COPY="${COPY} FROM public.deter_prod_deg_current WHERE audit_date IS NOT NULL  AND view_date >= (SELECT end_date FROM public.prodes_reference);"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${COPY}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
 # rename classes to (Supressão com solo exposto, supressão com vegetação, mineração e cicatriz de queimada)
 CHANGE_CLASS_NAME="UPDATE public.deter_current SET class_name='supressão com solo exposto' WHERE class_name ilike 'DESMAT_SOLO_EXP%';"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${CHANGE_CLASS_NAME}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${CHANGE_CLASS_NAME}"
 CHANGE_CLASS_NAME="UPDATE public.deter_current SET class_name='supressão com vegetação' WHERE class_name ilike 'DESMAT_VEG%';"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${CHANGE_CLASS_NAME}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${CHANGE_CLASS_NAME}"
 CHANGE_CLASS_NAME="UPDATE public.deter_current SET class_name='mineração' WHERE class_name ilike 'MINERACAO%';"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${CHANGE_CLASS_NAME}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${CHANGE_CLASS_NAME}"
 CHANGE_CLASS_NAME="UPDATE public.deter_current SET class_name='cicatriz de queimada' WHERE class_name ilike 'CIC_QUEIMADA%';"
-psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${CHANGE_CLASS_NAME}"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${CHANGE_CLASS_NAME}"
