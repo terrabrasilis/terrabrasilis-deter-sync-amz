@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# to logfile information
+echo "Generating shapefiles for ${PROJECT_NAME}"
+echo "-----------------------------------------------------------"
+
 # Import functions ===========================================
 . ${SCRIPTS_BASE_PATH}/functions.lib.sh
 # ============================================================

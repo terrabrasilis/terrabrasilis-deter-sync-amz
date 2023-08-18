@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# to logfile information
+echo "Generating JSON files for ${PROJECT_NAME}"
+echo "-----------------------------------------------------------"
+
 # get global env vars from Docker Secrets
 export GEOSERVER_USER=$(cat "$GEOSERVER_USER_FILE")
 export GEOSERVER_PASS=$(cat "$GEOSERVER_PASS_FILE")

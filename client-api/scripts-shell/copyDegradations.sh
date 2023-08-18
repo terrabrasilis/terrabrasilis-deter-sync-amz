@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# to logfile information
+echo "Copy the degradations to accumulation table for ${PROJECT_NAME}"
+echo "-----------------------------------------------------------"
+
 # get global env vars from Docker Secrets
 export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 export POSTGRES_PASS=$(cat "$POSTGRES_PASS_FILE")
