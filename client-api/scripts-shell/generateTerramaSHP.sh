@@ -31,16 +31,16 @@ fi;
 # STATIC_FILES_DIR comes from /etc/environments, recorded by Dockerfile during compilation time
 # Defines the destination directory of the generated files
 TARGET_DIR=$STATIC_FILES_DIR
+
 # work dir
-WORKSPACE_DIR=/shapefiles/$PROJECT_NAME
-
-DATE_LOG=$(date +%Y-%m-%d)
-LOGFILE="terrama_ftp_push_$DATE_LOG.log"
-
+WORKSPACE_DIR="${SHARED_DIR}/workspace/${PROJECT_NAME}"
 if [ ! -d $WORKSPACE_DIR ];
 then
 	mkdir -p $WORKSPACE_DIR
 fi;
+
+DATE_LOG=$(date +%Y-%m-%d)
+LOGFILE="terrama_ftp_push_$DATE_LOG.log"
 
 cd $WORKSPACE_DIR/
 

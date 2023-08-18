@@ -16,7 +16,7 @@ PASS=$POSTGRES_PASS
 # target dir for generated files
 TARGET_DIR=$SHARED_DIR/$PROJECT_NAME
 # work dir
-WORKSPACE_DIR=/shapefiles/$PROJECT_NAME
+WORKSPACE_DIR="${SHARED_DIR}/workspace/${PROJECT_NAME}"
 if [ ! -d $WORKSPACE_DIR ];
 then
 	mkdir -p $WORKSPACE_DIR
@@ -41,12 +41,15 @@ SELECT_PUBLIC="SELECT ${OUTPUT_COLUMNS} FROM ${FROM_PUBLIC} WHERE ${QUERY_FILTER
 
 cd $WORKSPACE_DIR/
 
-pgsql2shp -f $WORKSPACE_DIR/deter_auth -h $HOST -u $USER -P $PASS $DB "$SELECT_AUTH $FILTER_AUTH"
-pgsql2shp -f $WORKSPACE_DIR/deter_public -h $HOST -u $USER -P $PASS $DB "$SELECT_PUBLIC $FILTER_PUBLIC"
+pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-auth -h $HOST -u $USER -P $PASS $DB "$SELECT_AUTH $FILTER_AUTH"
+pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-public -h $HOST -u $USER -P $PASS $DB "$SELECT_PUBLIC $FILTER_PUBLIC"
 
-zip "${PROJECT_NAME}-auth.zip" deter_auth.shp deter_auth.shx deter_auth.prj deter_auth.dbf
-zip "${PROJECT_NAME}-public.zip" deter_public.shp deter_public.shx deter_public.prj deter_public.dbf
+zip "all.zip" ${PROJECT_NAME}-deter-auth.shp ${PROJECT_NAME}-deter-auth.shx ${PROJECT_NAME}-deter-auth.prj ${PROJECT_NAME}-deter-auth.dbf
+zip "public.zip" ${PROJECT_NAME}-deter-public.shp ${PROJECT_NAME}-deter-public.shx ${PROJECT_NAME}-deter-public.prj ${PROJECT_NAME}-deter-public.dbf
+
+# rm ${PROJECT_NAME}-deter-auth.{shp,shx,prj,dbf}
+# rm ${PROJECT_NAME}-deter-public.{shp,shx,prj,dbf}
 
 # move files to target dir for publish
-mv $WORKSPACE_DIR/"${PROJECT_NAME}-auth.zip" $TARGET_DIR
-mv $WORKSPACE_DIR/"${PROJECT_NAME}-public.zip" $TARGET_DIR
+mv $WORKSPACE_DIR/"all.zip" $TARGET_DIR
+mv $WORKSPACE_DIR/"public.zip" $TARGET_DIR
