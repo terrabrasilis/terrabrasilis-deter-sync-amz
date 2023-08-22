@@ -81,7 +81,7 @@ psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${
 COPY="INSERT INTO public.deter_current( "
 COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, uuid) "
 COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, uuid "
-COPY="${COPY} FROM public.deter_prod_deg_current WHERE audit_date IS NOT NULL  AND view_date >= (SELECT end_date FROM public.prodes_reference);"
+COPY="${COPY} FROM public.deter_prod_deg_current WHERE audit_date IS NOT NULL AND view_date >= (SELECT end_date FROM public.prodes_reference);"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
 # rename classes to (Supressão com solo exposto, supressão com vegetação, mineração e cicatriz de queimada)

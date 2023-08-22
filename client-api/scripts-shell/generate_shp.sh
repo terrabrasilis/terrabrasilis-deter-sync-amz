@@ -49,10 +49,11 @@ pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-auth -h $HOST -u $USER -P $PAS
 pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-public -h $HOST -u $USER -P $PASS $DB "$SELECT_PUBLIC $FILTER_PUBLIC"
 
 zip "all.zip" ${PROJECT_NAME}-deter-auth.shp ${PROJECT_NAME}-deter-auth.shx ${PROJECT_NAME}-deter-auth.prj ${PROJECT_NAME}-deter-auth.dbf
-zip "public.zip" ${PROJECT_NAME}-deter-public.shp ${PROJECT_NAME}-deter-public.shx ${PROJECT_NAME}-deter-public.prj ${PROJECT_NAME}-deter-public.dbf
+#zip "public.zip" ${PROJECT_NAME}-deter-public.shp ${PROJECT_NAME}-deter-public.shx ${PROJECT_NAME}-deter-public.prj ${PROJECT_NAME}-deter-public.dbf
+zip "public.zip" warning_about_data.txt
 
-# rm ${PROJECT_NAME}-deter-auth.{shp,shx,prj,dbf}
-# rm ${PROJECT_NAME}-deter-public.{shp,shx,prj,dbf}
+rm ${PROJECT_NAME}-deter-auth.{shp,shx,prj,dbf}
+rm ${PROJECT_NAME}-deter-public.{shp,shx,prj,dbf}
 
 # move files to target dir for publish
 mv $WORKSPACE_DIR/"all.zip" $TARGET_DIR
