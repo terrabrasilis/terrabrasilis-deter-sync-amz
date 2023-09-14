@@ -71,14 +71,14 @@ else
 	QUERY_FILTER_AUTH="uf != ('MS') AND tb1.areatotalkm >= "
 	QUERY_FILTER_PUBLIC="view_date <= (SELECT date FROM public.deter_publish_date) AND ${QUERY_FILTER_AUTH}"
 
-	QUERY="(SELECT id||'_curr' as gid, classname, "
+	QUERY="(SELECT gid||'_curr' as gid, classname, "
 	QUERY="${QUERY}quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, "
-	QUERY="${QUERY}areauckm, county as municipality, geocod as geocodibge, uf, uc, geom FROM deter_table "
+	QUERY="${QUERY}areauckm, county as municipality, geocod as geocodibge, uf, uc, geom FROM terrabrasilis.deter_table "
 	QUERY="${QUERY}WHERE date > (SELECT end_date FROM public.prodes_reference) "
 	QUERY="${QUERY}UNION "
-	QUERY="${QUERY}SELECT gid||'_hist', classname, "
+	QUERY="${QUERY}SELECT id||'_hist', classname, "
 	QUERY="${QUERY}quadrant, orbitpoint as path_row, date as view_date, lot, sensor, satellite, areatotalkm, areamunkm, "
-	QUERY="${QUERY}areauckm, county as municipality, geocod as geocodibge, uf, uc, geom FROM deter_history) as tb1 "
+	QUERY="${QUERY}areauckm, county as municipality, geocod as geocodibge, uf, uc, geom FROM public.deter_history) as tb1 "
 	QUERY="${QUERY}WHERE "
 
 	SELECT_PUBLIC="SELECT $OUTPUT_COLUMNS FROM "
