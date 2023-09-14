@@ -29,7 +29,7 @@ fi;
 WARNING_FILE=""
 
 # normalize output columns
-OUTPUT_COLUMNS="tb1.gid, tb1.classname, tb1.quadrant, tb1.path_row, tb1.view_date, tb1.sensor, tb1.satellite, tb1.areauckm, tb1.uc, tb1.areamunkm, tb1.municipality, tb1.geocodibge, tb1.uf, tb1.geom"
+OUTPUT_COLUMNS="tb1.gid as fid, tb1.classname, tb1.quadrant, tb1.path_row, tb1.view_date, tb1.sensor, tb1.satellite, tb1.areauckm, tb1.uc, tb1.areamunkm, tb1.municipality, tb1.geocodibge, tb1.uf, tb1.geom"
 
 
 if [ "$PROJECT_NAME" == "deter-cerrado-nb" ];
