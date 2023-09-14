@@ -70,7 +70,8 @@ DB=$(getDBName $PROJECT_NAME)
 COPY="INSERT INTO public.deter_current( "
 COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, uuid) "
 COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, uuid "
-COPY="${COPY} FROM public.deter_prod_def_current WHERE audit_date IS NOT NULL AND created_date::date>(SELECT MAX(create_date) FROM public.deter_current);"
+COPY="${COPY} FROM public.deter_prod_def_current WHERE audit_date IS NOT NULL "
+COPY="${COPY} AND created_date::date>(SELECT COALESCE(MAX(create_date), (SELECT end_date FROM public.prodes_reference)) FROM public.deter_current);"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
 # using SQL View through DBLink to remove degradation alerts
