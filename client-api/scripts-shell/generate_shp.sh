@@ -37,6 +37,7 @@ FILTER_PUBLIC="0.00"
 QUERY_FILTER_AUTH="area_km >= "
 QUERY_FILTER_PUBLIC="view_date <= (SELECT date FROM public.deter_publish_date) AND ${QUERY_FILTER_AUTH}"
 
+# this inputs is SQLViews on publish database
 FROM_AUTH=" public.deter_auth "
 FROM_PUBLIC=" public.deter_public "
 
