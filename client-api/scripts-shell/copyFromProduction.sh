@@ -42,19 +42,15 @@ export PGPASSWORD=$(cat "$POSTGRES_PROD_PASS_FILE")
 PRODUCTION_TABLES=("transitorias" "finais_sob_transitorias" "finais")
 for TABLE in ${PRODUCTION_TABLES[@]}
 do
-
-    GEN_UUID="UPDATE public.${TABLE} SET uuid=gen_random_uuid()::text WHERE uuid IS NULL;"
-    psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${GEN_UUID}"
-
     SET_AUDIT_DATE="${WITH}, audited AS ( "
-    SET_AUDIT_DATE="${SET_AUDIT_DATE} 	SELECT des.uuid, cd.satelite, cd.task_date::date as audit_date "
+    SET_AUDIT_DATE="${SET_AUDIT_DATE} 	SELECT des.object_id, cd.satelite, cd.task_date::date as audit_date "
     SET_AUDIT_DATE="${SET_AUDIT_DATE} 	FROM public.${TABLE} des, candidates cd "
     SET_AUDIT_DATE="${SET_AUDIT_DATE} 	WHERE des.scene_id=cd.scene_id AND des.cell_oid=cd.cell_id "
     SET_AUDIT_DATE="${SET_AUDIT_DATE} 	AND des.view_date=cd.view_date AND cd.task_date::date >= created_date::date "
     SET_AUDIT_DATE="${SET_AUDIT_DATE} 	AND des.audit_date IS NULL "
     SET_AUDIT_DATE="${SET_AUDIT_DATE} ) "
     SET_AUDIT_DATE="${SET_AUDIT_DATE} UPDATE public.${TABLE} SET audit_date=audited.audit_date, satellite=audited.satelite "
-    SET_AUDIT_DATE="${SET_AUDIT_DATE} FROM audited WHERE public.${TABLE}.uuid=audited.uuid;"
+    SET_AUDIT_DATE="${SET_AUDIT_DATE} FROM audited WHERE public.${TABLE}.object_id=audited.object_id;"
     psql -h ${POSTGRES_HOST_PROD} -U ${POSTGRES_USER} -p ${POSTGRES_PORT_PROD} -d ${DB} -c "${SET_AUDIT_DATE}"
 done
 
@@ -68,21 +64,23 @@ DB=$(getDBName $PROJECT_NAME)
 
 # using SQL View through DBLink to copy new deforestation alerts (only audited data)
 COPY="INSERT INTO public.deter_current( "
-COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, uuid) "
-COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, uuid "
-COPY="${COPY} FROM public.deter_prod_def_current WHERE audit_date IS NOT NULL "
-COPY="${COPY} AND created_date::date>(SELECT COALESCE(MAX(create_date), (SELECT end_date FROM public.prodes_reference)) FROM public.deter_current);"
+COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, object_id) "
+COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, object_id "
+COPY="${COPY} FROM public.deter_prod_def_current "
+COPY="${COPY} WHERE created_date::date>(SELECT COALESCE(MAX(create_date), (SELECT end_date FROM public.prodes_reference)) FROM public.deter_current) "
+# COPY="${COPY} AND audit_date IS NOT NULL;"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
-# using SQL View through DBLink to remove degradation alerts
+# Remove all degradation alerts from current table
 DEL="DELETE FROM public.deter_current WHERE class_name='cicatriz de queimada';"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${DEL}"
 
 # using SQL View through DBLink to copy degradation alerts (only audited data)
 COPY="INSERT INTO public.deter_current( "
-COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, uuid) "
-COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, uuid "
-COPY="${COPY} FROM public.deter_prod_deg_current WHERE audit_date IS NOT NULL AND view_date >= (SELECT end_date FROM public.prodes_reference);"
+COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, object_id) "
+COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, object_id "
+COPY="${COPY} FROM public.deter_prod_deg_current WHERE view_date >= (SELECT end_date FROM public.prodes_reference) "
+# COPY="${COPY} AND audit_date IS NOT NULL;"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
 # rename classes to (Supressão com solo exposto, supressão com vegetação, mineração e cicatriz de queimada)
