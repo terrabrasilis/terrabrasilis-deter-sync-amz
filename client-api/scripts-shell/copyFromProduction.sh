@@ -61,6 +61,14 @@ export POSTGRES_USER=$(cat "$POSTGRES_USER_FILE")
 export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
 # get publish database name 
 DB=$(getDBName $PROJECT_NAME)
+#
+# rule to copy data from NF database
+LAZY_LOAD=""
+if [ "$PROJECT_NAME" == "deter-nf" ];
+then
+    REF_DATE=$(date -d '2 day ago' '+%Y%m%d')
+    LAZY_LOAD="AND created_date::date < '${REF_DATE}'::date"
+fi;
 
 # using SQL View through DBLink to copy new deforestation alerts (only audited data)
 COPY="INSERT INTO public.deter_current( "
@@ -68,6 +76,7 @@ COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, sat
 COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, object_id "
 COPY="${COPY} FROM public.deter_prod_def_current "
 COPY="${COPY} WHERE created_date::date>(SELECT COALESCE(MAX(create_date), (SELECT end_date FROM public.prodes_reference)) FROM public.deter_current) "
+COPY="${COPY} ${LAZY_LOAD}"
 # COPY="${COPY} AND audit_date IS NOT NULL;"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
@@ -80,6 +89,8 @@ COPY="INSERT INTO public.deter_current( "
 COPY="${COPY} geom, class_name, area_km, view_date, create_date, audit_date, satellite, object_id) "
 COPY="${COPY} SELECT ST_Multi(spatial_data), class_name, (ST_Area(spatial_data::geography)/1000000) as area_km, view_date, created_date, audit_date, satellite, object_id "
 COPY="${COPY} FROM public.deter_prod_deg_current WHERE view_date >= (SELECT end_date FROM public.prodes_reference) "
+COPY="${COPY} ${LAZY_LOAD}"
+
 # COPY="${COPY} AND audit_date IS NOT NULL;"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${COPY}"
 
