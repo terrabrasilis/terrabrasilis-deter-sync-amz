@@ -10,7 +10,7 @@
 export PGUSER=$(cat "$POSTGRES_USER_FILE")
 export PGPASSWORD=$(cat "$POSTGRES_PASS_FILE")
 
-PROJECTS=("deter-amz" "deter-cerrado-nb")
+PROJECTS=("deter-amz" "deter-cerrado-nb" "deter-pantanal")
 # query to release data every week. The week day is defined in cronjob
 QUERY="UPDATE public.deter_publish_date SET date=(now() - interval '1 week') WHERE blocked=0;"
 
