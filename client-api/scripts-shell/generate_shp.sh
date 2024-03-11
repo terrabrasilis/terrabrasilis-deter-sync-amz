@@ -34,20 +34,23 @@ DB=$(getDBName $PROJECT_NAME)
 FILTER_AUTH="0.00"
 FILTER_PUBLIC="0.00"
 
-QUERY_FILTER_AUTH="area_km >= "
-QUERY_FILTER_PUBLIC="view_date <= (SELECT date FROM public.deter_publish_date) AND ${QUERY_FILTER_AUTH}"
+QUERY_FILTER_AUTH="area_km >= ${FILTER_AUTH}"
+QUERY_FILTER_PUBLIC="view_date <= (SELECT date FROM public.deter_publish_date) AND area_km >= ${FILTER_PUBLIC}"
+
+# remove the fire scar class from the output shapefile
+TMP_FILTER_CLASS=" AND class_name!='cicatriz de queimada'"
 
 # this inputs is SQLViews on publish database
 FROM_AUTH=" public.deter_auth "
 FROM_PUBLIC=" public.deter_public "
 
-SELECT_AUTH="SELECT ${OUTPUT_COLUMNS} FROM ${FROM_AUTH} WHERE ${QUERY_FILTER_AUTH}"
-SELECT_PUBLIC="SELECT ${OUTPUT_COLUMNS} FROM ${FROM_PUBLIC} WHERE ${QUERY_FILTER_PUBLIC}"
+SELECT_AUTH="SELECT ${OUTPUT_COLUMNS} FROM ${FROM_AUTH} WHERE ${QUERY_FILTER_AUTH} ${TMP_FILTER_CLASS}"
+SELECT_PUBLIC="SELECT ${OUTPUT_COLUMNS} FROM ${FROM_PUBLIC} WHERE ${QUERY_FILTER_PUBLIC} ${TMP_FILTER_CLASS}"
 
 cd $WORKSPACE_DIR/
 
-pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-auth -h $HOST -u $USER -P $PASS $DB "$SELECT_AUTH $FILTER_AUTH"
-pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-public -h $HOST -u $USER -P $PASS $DB "$SELECT_PUBLIC $FILTER_PUBLIC"
+pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-auth -h $HOST -u $USER -P $PASS $DB "$SELECT_AUTH"
+pgsql2shp -f $WORKSPACE_DIR/${PROJECT_NAME}-deter-public -h $HOST -u $USER -P $PASS $DB "$SELECT_PUBLIC"
 
 zip "all.zip" ${PROJECT_NAME}-deter-auth.shp ${PROJECT_NAME}-deter-auth.shx ${PROJECT_NAME}-deter-auth.prj ${PROJECT_NAME}-deter-auth.dbf ${PROJECT_NAME}-deter-auth.cpg
 zip "public.zip" ${PROJECT_NAME}-deter-public.shp ${PROJECT_NAME}-deter-public.shx ${PROJECT_NAME}-deter-public.prj ${PROJECT_NAME}-deter-public.dbf ${PROJECT_NAME}-deter-public.cpg
