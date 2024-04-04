@@ -1,5 +1,5 @@
 # m h  dom mon dow   command
 # used to copy data from production every days
-# 00 01 * * * /bin/bash /usr/local/daily_copy.sh
+00 01 * * * /bin/bash /usr/local/daily_copy.sh
 # used to generate files as JSONs and Shapefiles every days
 00 06 * * * /bin/bash /usr/local/exec_daily.sh
