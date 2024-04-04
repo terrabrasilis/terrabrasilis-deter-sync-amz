@@ -103,3 +103,8 @@ CHANGE_CLASS_NAME="UPDATE public.deter_current SET class_name='mineração' WHER
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${CHANGE_CLASS_NAME}"
 CHANGE_CLASS_NAME="UPDATE public.deter_current SET class_name='cicatriz de queimada' WHERE class_name ilike '%QUEIMADA%';"
 psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${CHANGE_CLASS_NAME}"
+
+# Update statement from Maurano's report code
+INTERSECTS_MUN="UPDATE public.deter_current as dt SET municipio=mun.nome, geocodigo=mun.geocodigo, uf=mun.uf"
+INTERSECTS_MUN="${INTERSECTS_MUN} FROM public.municipalities_biome as mun WHERE ST_INTERSECTS(dt.geom, mun.geom) AND dt.uf is NULL;"
+psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -p ${POSTGRES_PORT} -d ${DB} -c "${INTERSECTS_MUN}"
