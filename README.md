@@ -8,12 +8,15 @@ Another component, named here by Scripts, is implemented with some shell scripts
 
 ## When it's runs
 
-The default configuration runs daily, synchronized as follows:
+Default daily setting for data synchronization:
 
-- At 08:00 the deter-b-sync-data-client runs get data from source API;
-- At 09:00 the deter-b-sync-data-client runs the status check and send result over email;
-- At 07:00 changes release date to publish data, every friday.
-- At 08:30 the Scripts export JSON files and Shapefiles;
+- At 04:00 the deter-b-sync-data-client runs get data from source API;
+- At 04:30 the deter-b-sync-data-client runs the status check and send result over email;
+- At 06:00 the Scripts export JSON files and Shapefiles;
+
+Default weekly setting to release data to anonymous users:
+
+- At 05:30 changes release date to publish data, every friday.
 
 ## To change the synchronization time
 
