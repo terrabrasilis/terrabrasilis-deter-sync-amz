@@ -6,7 +6,7 @@
 #   docker run -d --rm --name terrabrasilis_deter_scripts -v $PWD:/logs -v $PWD:/data/files terrabrasilis/deter-generate-files:vx.y
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="script-tasks" \
@@ -27,7 +27,7 @@ RUN apt-get update \
     curl \
     zip \
     ssmtp \
-    postgresql-14-postgis-3 \
+    postgresql-12-postgis-3 \
     postgis \
     && rm -rf /var/lib/apt/lists/*
 
