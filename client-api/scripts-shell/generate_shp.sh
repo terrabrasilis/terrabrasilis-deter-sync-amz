@@ -27,7 +27,7 @@ then
 fi;
 
 # normalize output columns
-OUTPUT_COLUMNS="fid, uuid, class_name, area_km, view_date, audit_date, create_date, sensor, satellite, path_row, geom"
+OUTPUT_COLUMNS="fid, uuid::varchar, class_name, area_km, view_date, audit_date, create_date, sensor, satellite, path_row, geom"
 
 DB=$(getDBName $PROJECT_NAME)
 
