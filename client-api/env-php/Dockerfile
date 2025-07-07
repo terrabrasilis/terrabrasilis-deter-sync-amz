@@ -6,7 +6,7 @@
 #   docker run -d --rm --name terrabrasilis_deter_sync_client -v $PWD:/usr/local/data terrabrasilis/deter-amz-sync-client:vx.y
 #
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
-FROM php:5.6-cli
+FROM php:8.4-cli
 
 LABEL "br.inpe.dpi"="INPE/DPI-TerraBrasilis" \
 br.inpe.dpi.terrabrasilis="client-api" \
@@ -14,6 +14,10 @@ author="Andre Carvalho" \
 author.email="andre.carvalho@inpe.br" \
 description="API's client to sync database between INPE/CRA and INPE/SJC of the DETERB project of the Amazon."
 #-------------Application Specific Stuff ----------------------------------------------------
+
+RUN echo "deb [trusted=yes] http://archive.debian.org/debian stretch main non-free contrib" > /etc/apt/sources.list
+RUN echo "deb-src [trusted=yes] http://archive.debian.org/debian stretch main non-free contrib" >> /etc/apt/sources.list
+RUN echo "deb [trusted=yes] http://archive.debian.org/debian-security stretch/updates main non-free contrib" >> /etc/apt/sources.list
 
 RUN apt-get -o Acquire::ForceIPv4=true update \
     && apt-get install -y \
@@ -29,7 +33,7 @@ RUN apt-get -o Acquire::ForceIPv4=true update \
 # define the timezone to run cron
 ENV TZ=America/Sao_Paulo
 
-ENV INSTALL_PATH /usr/local
+ENV INSTALL_PATH=/usr/local
 
 RUN mkdir -p $INSTALL_PATH/php-client
 
