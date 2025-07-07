@@ -1,4 +1,4 @@
 # m h  dom mon dow   command
 # Tasks to syncronize and check state of the last syncronize for deter_amazonia_nb AMZ project
-00 04 * * * /usr/local/bin/php /usr/local/php-client/index.php
-30 04 * * * /usr/local/bin/php /usr/local/php-client/checkStatus.php
+45 04 * * * /usr/local/bin/php /usr/local/php-client/index.php
+55 04 * * * /usr/local/bin/php /usr/local/php-client/checkStatus.php
